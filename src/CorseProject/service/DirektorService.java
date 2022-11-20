@@ -3,9 +3,11 @@ package CorseProject.service;
 import CorseProject.dao.ClientRep;
 import CorseProject.dao.EmployeeRep;
 import CorseProject.dao.ReportManagerRep;
+import CorseProject.dao.ReviewsRep;
 import CorseProject.dao.impl.ClientRepImpl;
 import CorseProject.dao.impl.EmployeeRepImpl;
 import CorseProject.dao.impl.ReportManagerRepImpl;
+import CorseProject.dao.impl.ReviewsRepImpl;
 import CorseProject.models.Employee;
 
 import java.util.Scanner;
@@ -15,6 +17,7 @@ public class DirektorService {
     public static EmployeeRep employeeRep = new EmployeeRepImpl();
     public static ClientRep clientRep = new ClientRepImpl();
     public static ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
+    public static ReviewsRep reviewsRep = new ReviewsRepImpl();
     public static Scanner scanner = new Scanner(System.in);
 
     public static void showMenu (){
@@ -44,7 +47,7 @@ public class DirektorService {
 
                 case 3 -> System.out.println("redact");
 
-                case 4 -> System.out.println("reviews");
+                case 4 -> showReview();
 
                 case 5 -> System.out.println(raiseSalary());
 
@@ -83,6 +86,12 @@ public class DirektorService {
         System.out.println("Общий бюджет: " + totalBuget + "\n");
         // возращает сумму ислоьзованую для заработной платы
         return totalBuget - (totalBuget - budgetThatUsed);
+    }
+
+    public static void showReview (){
+        for (int i = 0; i < reviewsRep.getAllReviews().size(); i++) {
+            System.out.printf(reviewsRep.getAllReviews().get(i).getReview() + "%15s",
+                    reviewsRep.getAllReviews().get(i).getIdClient() + "\n");}
     }
 
     public static void register (){

@@ -1,6 +1,5 @@
 package CorseProject.dao;
 
-import CorseProject.models.Employee;
 import CorseProject.models.ReportManager;
 
 import java.util.List;

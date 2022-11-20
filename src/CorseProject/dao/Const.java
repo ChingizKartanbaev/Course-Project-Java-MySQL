@@ -33,6 +33,10 @@ public class Const {
     public static final String REPORRMANAGER_CITYNAME = "cityName";
     public static final String REPORRMANAGER_CUSTOMERCOVERAGEAREA = "customerCoverageArea";
 
+    public static final String REVIEWS_TABLE = "reviews";
+    public static final String REVIEWS_ID = "idReviews";
+    public static final String REVIEWS_REVIEW = "review";
+    public static final String REVIEWS_IDCLIENT = "idClient";
 
 
 
