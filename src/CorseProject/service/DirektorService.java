@@ -2,21 +2,27 @@ package CorseProject.service;
 
 import CorseProject.dao.ClientRep;
 import CorseProject.dao.EmployeeRep;
+import CorseProject.dao.ReportManagerRep;
 import CorseProject.dao.impl.ClientRepImpl;
 import CorseProject.dao.impl.EmployeeRepImpl;
-import CorseProject.models.Client;
+import CorseProject.dao.impl.ReportManagerRepImpl;
 import CorseProject.models.Employee;
+
 import java.util.Scanner;
 
-public class Direktor {
+public class DirektorService {
 
     public static EmployeeRep employeeRep = new EmployeeRepImpl();
     public static ClientRep clientRep = new ClientRepImpl();
+    public static ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
     public static Scanner scanner = new Scanner(System.in);
 
     public static void showMenu (){
 
-        System.out.println("""
+        loop:
+        while (true){
+
+            System.out.println("""
 
                 Выберете меню\s
                 1 - Показать список всех зон покрытия
@@ -30,28 +36,42 @@ public class Direktor {
                 9 - Выход
                 """);
 
-        switch (scanner.nextInt()){
-            case 1 -> System.out.println("list");
+            switch (scanner.nextInt()){
 
-            case 2 -> System.out.println("Бюджет каоторый испольщуется: " + budget());
+                case 1 -> showAListOfAllCoverageAreas();
 
-            case 3 -> System.out.println("redact");
+                case 2 -> System.out.println("Бюджет каоторый испольщуется: " + budget());
 
-            case 4 -> System.out.println("reviews");
+                case 3 -> System.out.println("redact");
 
-            case 5 -> System.out.println(raiseSalary());
+                case 4 -> System.out.println("reviews");
 
-            case 6 -> System.out.println(lowerSalary());
+                case 5 -> System.out.println(raiseSalary());
 
-            case 7 -> register();
+                case 6 -> System.out.println(lowerSalary());
 
-            case 8 -> delete();
+                case 7 -> register();
 
-            case 9 -> System.out.println("До свидания!");
+                case 8 -> delete();
+
+                case 9 -> {
+                    System.out.println("До свидания!");
+                    break loop;
+                }
+
+            }
         }
     }
 
+    public static void showAListOfAllCoverageAreas (){
+        // выводит список зон покрытия
+        for (int i = 0; i < reportManagerRep.getAllReports().size(); i++) {
+            System.out.printf(reportManagerRep.getAllReports().get(i).getCityName() + "%15s",
+                    reportManagerRep.getAllReports().get(i).getCustomerCoverageArea() + "\n");}
+    }
+
     public static double budget() {
+
         double totalBuget = 1000000;
         double budgetThatUsed = 0;
 
@@ -67,37 +87,26 @@ public class Direktor {
 
     public static void register (){
 
-        System.out.print("Введите кого вы хотие зарегистрировать" +
-                "1 - Работник " +
-                "2 - Клиент: ");
-        switch (scanner.nextInt()){
+        System.out.print("Введите данные работника" );
+        // регистрация сотриднука
+        System.out.println("Имя");
+        String fullName = scanner.nextLine();
+        System.out.println("Логин");
+        String login = scanner.nextLine();
+        System.out.println("Пароль");
+        String password = scanner.nextLine();
+        System.out.println("Тип аккаунта");
+        String typeOfAccount = scanner.nextLine();
+        System.out.println("Зарабатную плату");
+        double salary = scanner.nextDouble();
+        Employee employeeAdd = new Employee(fullName, login, password, typeOfAccount, salary);
 
-            //регистрация сотриднука
-            case 1 -> {
-                String fullName = scanner.nextLine();
-                String login = scanner.nextLine();
-                String password = scanner.nextLine();
-                String typeOfAccount = scanner.nextLine();
-                double salary = scanner.nextDouble();
-                Employee employeeAdd = new Employee(fullName, login, password, typeOfAccount, salary);
-
-                employeeRep.createEmployee(employeeAdd);
-            }
-
-            //регистрация клиента
-            case 2 -> {
-                Scanner scanner = new Scanner(System.in);
-                String fullName = scanner.nextLine();
-                String login = scanner.nextLine();
-                String password = scanner.nextLine();
-                CorseProject.models.Client clientAdd = new Client(fullName, login, password);
-
-                clientRep.createClient(clientAdd);
-            }
-        }
+        // записываются все данные в бд
+        employeeRep.createEmployee(employeeAdd);
     }
 
     public static void delete () {
+
         System.out.println("Введите кого вы хотие удалить" +
                 "1 - Работник " +
                 "2 - Клиент: ");
@@ -121,6 +130,7 @@ public class Direktor {
     }
 
     public static String raiseSalary (){
+
         // выводим список всех работников
         for (Employee employee : employeeRep.getAllEmployee()) {
             System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
@@ -135,7 +145,7 @@ public class Direktor {
         double upSalary = scanner.nextDouble();
         double refreshSalary = employee.getSalary() + upSalary;
 
-        //запись в бд
+        // запись в бд
         employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
         return "Зарплата была поднята!";
     }
@@ -155,7 +165,7 @@ public class Direktor {
         double upSalary = scanner.nextDouble();
         double refreshSalary = employee.getSalary() - upSalary;
 
-        //запись в бд
+        // запись в бд
         employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
         return "Зарплата была понижена!";
     }

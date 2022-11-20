@@ -1,12 +1,10 @@
 package CorseProject.service;
 
-
 import CorseProject.dao.EmployeeRep;
 import CorseProject.dao.impl.EmployeeRepImpl;
-
 import java.util.Scanner;
 
-public class Manager {
+public class ManagerService {
 
     public static Scanner scanner = new Scanner(System.in);
     public static EmployeeRep employeeRep = new EmployeeRepImpl();
@@ -26,10 +24,10 @@ public class Manager {
 
         switch (scanner.nextInt()){
 
-            case 1 -> {for (int i = 0; i < employeeRep.getAllEmployee().size(); i++) {
+            case 1 -> {
+                for (int i = 0; i < employeeRep.getAllEmployee().size(); i++) {
                 System.out.printf(employeeRep.getAllEmployee().get(i).getFullName() + "%20s",
                         employeeRep.getAllEmployee().get(i).getTypeOfAccount() + "\n");}
-
             }
             case 2 -> {}
             case 3 -> {}

@@ -1,6 +1,6 @@
 package CorseProject.service;
 
-public class Cashier {
+public class CashierService {
     public static void cashierMenu (){
 
     }
