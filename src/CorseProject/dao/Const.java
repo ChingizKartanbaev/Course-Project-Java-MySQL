@@ -38,6 +38,11 @@ public class Const {
     public static final String REVIEWS_REVIEW = "review";
     public static final String REVIEWS_IDCLIENT = "idClient";
 
+    public static final String BUDGET_TABLE = "budget";
+    public static final String BUDGET_ID = "idbudget";
+    public static final String BUDGET_BUDGETALLOCATION = "budgetAllocation";
+    public static final String BUDGET_EXPENSES = "expenses";
+
 
 
 }

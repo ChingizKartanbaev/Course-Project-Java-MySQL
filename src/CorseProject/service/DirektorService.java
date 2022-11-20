@@ -1,24 +1,19 @@
 package CorseProject.service;
 
-import CorseProject.dao.ClientRep;
-import CorseProject.dao.EmployeeRep;
-import CorseProject.dao.ReportManagerRep;
-import CorseProject.dao.ReviewsRep;
-import CorseProject.dao.impl.ClientRepImpl;
-import CorseProject.dao.impl.EmployeeRepImpl;
-import CorseProject.dao.impl.ReportManagerRepImpl;
-import CorseProject.dao.impl.ReviewsRepImpl;
+import CorseProject.dao.*;
+import CorseProject.dao.impl.*;
 import CorseProject.models.Employee;
 
 import java.util.Scanner;
 
 public class DirektorService {
 
-    public static EmployeeRep employeeRep = new EmployeeRepImpl();
-    public static ClientRep clientRep = new ClientRepImpl();
-    public static ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
-    public static ReviewsRep reviewsRep = new ReviewsRepImpl();
-    public static Scanner scanner = new Scanner(System.in);
+    private static final EmployeeRep employeeRep = new EmployeeRepImpl();
+    private static final ClientRep clientRep = new ClientRepImpl();
+    private static final ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
+    private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
+    private static final BudgetRep budgetRep = new BudgetRepImpl();
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void showMenu (){
 
@@ -43,15 +38,15 @@ public class DirektorService {
 
                 case 1 -> showAListOfAllCoverageAreas();
 
-                case 2 -> System.out.println("Бюджет каоторый испольщуется: " + budget());
+                case 2 -> System.out.println("Бюджет который испольщуется: " + budget());
 
-                case 3 -> System.out.println("redact");
+                case 3 -> redactBudget();
 
                 case 4 -> showReview();
 
-                case 5 -> System.out.println(raiseSalary());
+                case 5 -> raiseSalary();
 
-                case 6 -> System.out.println(lowerSalary());
+                case 6 -> lowerSalary();
 
                 case 7 -> register();
 
@@ -82,16 +77,103 @@ public class DirektorService {
         for (Employee employee : employeeRep.getAllEmployee()) {
             budgetThatUsed += employee.getSalary();
         }
+        budgetRep.updateExpenses(2,budgetThatUsed);
         // принтует общий бюджет
         System.out.println("Общий бюджет: " + totalBuget + "\n");
         // возращает сумму ислоьзованую для заработной платы
         return totalBuget - (totalBuget - budgetThatUsed);
     }
 
+    public static void redactBudget (){
+
+        while (true){
+            System.out.print("Введите новую бюджет для зароботной платы: ");
+            double newBudgtForSalary = scanner.nextDouble();
+
+            if(budgetRep.getByBudgetAllocation("Total budget").getExpenses() >
+                    (budgetRep.getByBudgetAllocation("Actual expenses").getExpenses() + newBudgtForSalary)){
+                budgetRep.updateExpenses(2, newBudgtForSalary);
+                System.out.println("Новый бюджет успешно сохранен");
+                break;
+            }else {
+                System.out.println("Ошибка бюджет зарплаты превышает общий бюджет. Общтий бюджет = " +
+                        budgetRep.getByBudgetAllocation("Total budget").getExpenses());
+            }
+        }
+
+    }
+
     public static void showReview (){
         for (int i = 0; i < reviewsRep.getAllReviews().size(); i++) {
             System.out.printf(reviewsRep.getAllReviews().get(i).getReview() + "%15s",
                     reviewsRep.getAllReviews().get(i).getIdClient() + "\n");}
+    }
+
+    public static void raiseSalary (){
+
+        double salaryThatUsed = 0;
+
+        // выводим список всех работников
+        for (Employee employee : employeeRep.getAllEmployee()) {
+            System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
+        }
+        System.out.print("Введите айди: ");
+
+        // поиск по айди
+        Employee employee = employeeRep.getById(scanner.nextInt());
+
+        while (true){
+            // ввод сумм и подсчет новой заработной платы;
+            System.out.print("Сумму на которуй вы хотите повысить: ");
+            double upSalary = scanner.nextDouble();
+            double refreshSalary = employee.getSalary() + upSalary;
+
+            // сумма всех зарплат
+            for (Employee employee1 : employeeRep.getAllEmployee()) {
+                salaryThatUsed = employee1.getSalary();
+            }
+
+            // проверка на повышение зарплаты, зп должна быть не больше выделеного бюджета
+            if(budgetRep.getByBudgetAllocation("Salary budget").getExpenses() > (refreshSalary
+                    + salaryThatUsed)){
+                // запись в бд
+                employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
+                System.out.println("Зарплата было повышена");
+                break;
+
+            }else {
+                System.out.println("Ошибка зарплата превышает выделеный бюджет");
+            }
+        }
+
+    }
+
+    public static void lowerSalary (){
+
+        // выводим список всех работников
+        for (Employee employee : employeeRep.getAllEmployee()) {
+            System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
+        }
+        System.out.print("Введите айди: ");
+        // поиск по айди
+        Employee employee = employeeRep.getById(scanner.nextInt());
+
+
+        while (true){
+
+            // ввод сумм и подсчет новой заработной платы;
+            System.out.print("Сумму на которуй вы хотите понизить: ");
+            double upSalary = scanner.nextDouble();
+            double refreshSalary = employee.getSalary() - upSalary;
+
+            if(refreshSalary > 0){
+                // запись в бд
+                employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
+                break;
+            } else {
+                System.out.println("Ошибка зарплат не может быть отрицательной");
+            }
+        }
     }
 
     public static void register (){
@@ -136,46 +218,5 @@ public class DirektorService {
                 delete();
             }
         }
-    }
-
-    public static String raiseSalary (){
-
-        // выводим список всех работников
-        for (Employee employee : employeeRep.getAllEmployee()) {
-            System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
-        }
-        System.out.print("Введите айди: ");
-
-        // поиск по айди
-        Employee employee = employeeRep.getById(scanner.nextInt());
-
-        // ввод сумм и подсчет новой заработной платы;
-        System.out.print("Сумму на которуй вы хотите повысить: ");
-        double upSalary = scanner.nextDouble();
-        double refreshSalary = employee.getSalary() + upSalary;
-
-        // запись в бд
-        employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
-        return "Зарплата была поднята!";
-    }
-
-    public static String lowerSalary (){
-        // выводим список всех работников
-        for (Employee employee : employeeRep.getAllEmployee()) {
-            System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
-        }
-        System.out.print("Введите айди: ");
-
-        // поиск по айди
-        Employee employee = employeeRep.getById(scanner.nextInt());
-
-        // ввод сумм и подсчет новой заработной платы;
-        System.out.print("Сумму на которуй вы хотите понизить: ");
-        double upSalary = scanner.nextDouble();
-        double refreshSalary = employee.getSalary() - upSalary;
-
-        // запись в бд
-        employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
-        return "Зарплата была понижена!";
     }
 }

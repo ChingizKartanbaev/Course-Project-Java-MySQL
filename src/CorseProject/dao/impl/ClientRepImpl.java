@@ -4,7 +4,6 @@ import CorseProject.dao.ClientRep;
 import CorseProject.dao.Const;
 import CorseProject.dao.DbHelper;
 import CorseProject.models.Client;
-import CorseProject.models.Employee;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ public class ClientRepImpl implements ClientRep {
 
     @Override
     public void createClient(Client client) {
+
         String insert = "INSERT INTO " + Const.CLIENT_TABLE + "(" + Const.CLIENT_FULLNAME + "," + Const.CLIENT_LOGIN + "," +
                 Const.CLIENT_PASSWORD + ")" + "VALUES(?,?,?)";
 
@@ -32,7 +32,6 @@ public class ClientRepImpl implements ClientRep {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

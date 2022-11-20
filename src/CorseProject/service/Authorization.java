@@ -9,9 +9,9 @@ import CorseProject.models.Client;
 import java.util.Scanner;
 
 public class Authorization {
-    public static EmployeeRep employeeRep = new EmployeeRepImpl();
-    public static ClientRep clientRep = new ClientRepImpl();
-    public static Scanner scanner = new Scanner(System.in);
+    private static final EmployeeRep employeeRep = new EmployeeRepImpl();
+    private static final ClientRep clientRep = new ClientRepImpl();
+    private static final Scanner scanner = new Scanner(System.in);
 
     public void authotization (){
 
