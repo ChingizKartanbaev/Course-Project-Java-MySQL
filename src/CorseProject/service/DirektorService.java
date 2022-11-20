@@ -1,5 +1,6 @@
 package CorseProject.service;
 
+import CorseProject.utils.PrettyTable;
 import CorseProject.dao.*;
 import CorseProject.dao.impl.*;
 import CorseProject.models.Employee;
@@ -38,7 +39,7 @@ public class DirektorService {
 
                 case 1 -> showAListOfAllCoverageAreas();
 
-                case 2 -> System.out.println("Бюджет который испольщуется: " + budget());
+                case 2 -> budget();
 
                 case 3 -> redactBudget();
 
@@ -62,39 +63,50 @@ public class DirektorService {
     }
 
     public static void showAListOfAllCoverageAreas (){
+
         // выводит список зон покрытия
+        PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
         for (int i = 0; i < reportManagerRep.getAllReports().size(); i++) {
-            System.out.printf(reportManagerRep.getAllReports().get(i).getCityName() + "%15s",
-                    reportManagerRep.getAllReports().get(i).getCustomerCoverageArea() + "\n");}
+            prettyTable.addRow(reportManagerRep.getAllReports().get(i).getCityName(),
+                    reportManagerRep.getAllReports().get(i).getCustomerCoverageArea());
+        }
+        System.out.println(prettyTable);
     }
 
-    public static double budget() {
+    public static void budget() {
 
-        double totalBuget = 1000000;
         double budgetThatUsed = 0;
+
+        PrettyTable prettyTable = new PrettyTable("Общий бюджет необходимый для зарплаты", "Используемы бюджет");
 
         // получает весь список сотрудников и через employee.getSalary() суммирует общюю сумму
         for (Employee employee : employeeRep.getAllEmployee()) {
             budgetThatUsed += employee.getSalary();
         }
-        budgetRep.updateExpenses(2,budgetThatUsed);
-        // принтует общий бюджет
-        System.out.println("Общий бюджет: " + totalBuget + "\n");
-        // возращает сумму ислоьзованую для заработной платы
-        return totalBuget - (totalBuget - budgetThatUsed);
+
+        budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed;
+
+        prettyTable.addRow(String.valueOf(budgetRep.getByBudgetAllocation("Salary budget").getExpenses()),
+                String.valueOf(budgetThatUsed));
+
+        System.out.println(prettyTable);
     }
 
     public static void redactBudget (){
 
         while (true){
+
+            // вводим новый бюджет
             System.out.print("Введите новую бюджет для зароботной платы: ");
             double newBudgtForSalary = scanner.nextDouble();
 
-            if(budgetRep.getByBudgetAllocation("Total budget").getExpenses() >
+            // проверка (общий бюджет > (прочие расходы + новый бюджет для зп)) если true то новый бюджет записывается в бд
+            if(budgetRep.getByBudgetAllocation("Total budget").getExpenses() >=
                     (budgetRep.getByBudgetAllocation("Actual expenses").getExpenses() + newBudgtForSalary)){
                 budgetRep.updateExpenses(2, newBudgtForSalary);
                 System.out.println("Новый бюджет успешно сохранен");
                 break;
+
             }else {
                 System.out.println("Ошибка бюджет зарплаты превышает общий бюджет. Общтий бюджет = " +
                         budgetRep.getByBudgetAllocation("Total budget").getExpenses());
@@ -104,9 +116,13 @@ public class DirektorService {
     }
 
     public static void showReview (){
+
+        PrettyTable prettyTable = new PrettyTable("Отзыв", "Айди клиента");
         for (int i = 0; i < reviewsRep.getAllReviews().size(); i++) {
-            System.out.printf(reviewsRep.getAllReviews().get(i).getReview() + "%15s",
-                    reviewsRep.getAllReviews().get(i).getIdClient() + "\n");}
+            prettyTable.addRow(reviewsRep.getAllReviews().get(i).getReview(),
+                    String.valueOf(reviewsRep.getAllReviews().get(i).getIdClient()));
+        }
+        System.out.println(prettyTable);
     }
 
     public static void raiseSalary (){
@@ -138,7 +154,7 @@ public class DirektorService {
                     + salaryThatUsed)){
                 // запись в бд
                 employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
-                System.out.println("Зарплата было повышена");
+                System.out.println("Зарплата была повышена");
                 break;
 
             }else {
