@@ -4,7 +4,6 @@ import CorseProject.dao.BudgetRep;
 import CorseProject.dao.Const;
 import CorseProject.dao.DbHelper;
 import CorseProject.models.Budget;
-import CorseProject.models.Client;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -97,6 +96,7 @@ public class BudgetRepImpl implements BudgetRep {
         }
     }
 
+    //доделать
     @Override
     public void deleteBudget(long id) {
 

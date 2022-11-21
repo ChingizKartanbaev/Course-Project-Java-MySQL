@@ -126,7 +126,5 @@ public class ClientRepImpl implements ClientRep {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }

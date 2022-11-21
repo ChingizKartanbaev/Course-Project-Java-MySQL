@@ -3,6 +3,7 @@ package CorseProject.dao.impl;
 import CorseProject.dao.Const;
 import CorseProject.dao.DbHelper;
 import CorseProject.dao.ReviewsRep;
+import CorseProject.models.Client;
 import CorseProject.models.Reviews;
 
 import java.sql.PreparedStatement;
@@ -58,6 +59,25 @@ public class ReviewsRepImpl implements ReviewsRep {
 
     @Override
     public Reviews getReviewByClientId(int id) {
-        return null;
+
+        String select = "SELECT * FROM " + Const.REVIEWS_TABLE + " WHERE " + Const.REVIEWS_IDCLIENT + "=?";
+
+        try {
+            PreparedStatement preparedStatement = dbHelper.dbGetConnection().prepareStatement(select);
+            preparedStatement.setInt(1, Math.toIntExact(id));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Reviews reviews = new Reviews();
+
+            while (resultSet.next()){
+                reviews.setIdReviews(resultSet.getLong("idReviews"));
+                reviews.setReview(resultSet.getNString("review"));
+                reviews.setIdClient(resultSet.getInt("idClient"));
+            }
+            return reviews;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

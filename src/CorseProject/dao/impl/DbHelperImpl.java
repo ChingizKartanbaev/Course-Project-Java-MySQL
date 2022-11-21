@@ -25,9 +25,4 @@ public class DbHelperImpl implements DbHelper {
 
         return connection;
     }
-
-
-
-
-
 }

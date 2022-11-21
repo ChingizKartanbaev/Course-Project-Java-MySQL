@@ -37,4 +37,9 @@ public class Reviews {
     public void setIdClient(int idClient) {
         this.idClient = idClient;
     }
+
+    @Override
+    public String toString() {
+        return idReviews + " " + review + " " + idClient;
+    }
 }

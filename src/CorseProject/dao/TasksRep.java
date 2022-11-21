@@ -9,7 +9,7 @@ public interface TasksRep {
 
     void createTasks (Tasks tasks);
 
-    List<Tasks> getAllReviews();
+    List<Tasks> getAllTasks();
 
-    Reviews getTaskById (long id);
+    Tasks getTaskById (long id);
 }

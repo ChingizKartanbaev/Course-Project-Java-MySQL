@@ -3,7 +3,6 @@ package CorseProject.dao.impl;
 import CorseProject.dao.Const;
 import CorseProject.dao.DbHelper;
 import CorseProject.dao.ReportManagerRep;
-import CorseProject.models.Employee;
 import CorseProject.models.ReportManager;
 
 import java.sql.PreparedStatement;
