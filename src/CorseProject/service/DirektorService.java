@@ -71,7 +71,7 @@ public class DirektorService {
         System.out.println(prettyTable);
     }
 
-    public static void budget() {
+    private static void budget() {
 
         double budgetThatUsed = 0;
 
@@ -92,7 +92,7 @@ public class DirektorService {
         System.out.println(prettyTable);
     }
 
-    public static void redactBudget (){
+    private static void redactBudget (){
 
         while (true){
 
@@ -139,7 +139,7 @@ public class DirektorService {
         System.out.println(prettyTable);
     }
 
-    public static void raiseSalary (){
+    private static void raiseSalary (){
 
         double salaryThatUsed = 0;
 
@@ -177,7 +177,7 @@ public class DirektorService {
         }
     }
 
-    public static void lowerSalary (){
+    private static void lowerSalary (){
 
         // выводим список всех работников
         for (Employee employee : employeeRep.getAllEmployee()) {
@@ -204,16 +204,18 @@ public class DirektorService {
         }
     }
 
-    public static void register (){
+    private static void register (){
+        // Заглушка
+        String n = scanner.nextLine();
 
         System.out.println("Введите данные работника" );
         // регистрация сотриднука
         System.out.println("Имя");
-        String fullName = scanner.next();
+        String fullName = scanner.nextLine();
         System.out.println("Логин");
-        String login = scanner.next();
+        String login = scanner.nextLine();
         System.out.println("Пароль");
-        String password = scanner.next();
+        String password = scanner.nextLine();
         System.out.println("Тип аккаунта");
         String typeOfAccount = scanner.next();
         System.out.println("Зарабатную плату");
@@ -224,7 +226,7 @@ public class DirektorService {
         employeeRep.createEmployee(employeeAdd);
     }
 
-    public static void delete () {
+    private static void delete () {
 
         System.out.println("Введите кого вы хотие удалить" +
                 "1 - Работник " +

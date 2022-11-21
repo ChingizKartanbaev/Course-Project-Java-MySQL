@@ -88,6 +88,33 @@ public class EmployeeRepImpl implements EmployeeRep {
     }
 
     @Override
+    public Employee getByTypeOfAccount (String typeofAccount){
+
+        String select = "SELECT * FROM " + Const.EMPLOYEE_TABEL + " WHERE " + Const.EMPLOYEE_TYPEOFACCOUNT + "=?";
+
+        try {
+            PreparedStatement preparedStatement = dbHelper.dbGetConnection().prepareStatement(select);
+            preparedStatement.setString(1, typeofAccount);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Employee employee = new Employee();
+
+            while (resultSet.next()){
+                employee.setId(resultSet.getLong("idEmployee"));
+                employee.setFullName(resultSet.getNString("fullName"));
+                employee.setLogin(resultSet.getString("login"));
+                employee.setPassword(resultSet.getString("passwords"));
+                employee.setTypeOfAccount(resultSet.getString("typeOfAccount"));
+                employee.setSalary(resultSet.getDouble("salary"));
+            }
+            return employee;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void updateEmployeeSalary (int id, double money) {
 
         String update = "UPDATE " + Const.EMPLOYEE_TABEL + " set " + Const.EMPLOYEE_SALATY + "=? WHERE " + Const.EMPLOYEE_ID + "=?";

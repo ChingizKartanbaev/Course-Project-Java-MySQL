@@ -43,6 +43,9 @@ public class Const {
     public static final String BUDGET_BUDGETALLOCATION = "budgetAllocation";
     public static final String BUDGET_EXPENSES = "expenses";
 
-
+    public static final String TASKS_TABLE = "tasks";
+    public static final String TASKS_ID = "idTasks";
+    public static final String TASKS_TASK = "Task";
+    public static final String TASKS_IDEMPLOYEE = "idEmployee";
 
 }
