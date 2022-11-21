@@ -72,7 +72,8 @@ public class ManagerService {
         // выводит список зон покрытия
         PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
 
-        reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),x.getCustomerCoverageArea()));
+        reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),
+                x.getCustomerCoverageArea()));
 
         return prettyTable;
     }
