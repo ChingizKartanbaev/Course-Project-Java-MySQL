@@ -66,10 +66,8 @@ public class DirektorService {
 
         // выводит список зон покрытия
         PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
-        for (int i = 0; i < reportManagerRep.getAllReports().size(); i++) {
-            prettyTable.addRow(reportManagerRep.getAllReports().get(i).getCityName(),
-                    reportManagerRep.getAllReports().get(i).getCustomerCoverageArea());
-        }
+
+        reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),x.getCustomerCoverageArea()));
         System.out.println(prettyTable);
     }
 
@@ -84,7 +82,9 @@ public class DirektorService {
             budgetThatUsed += employee.getSalary();
         }
 
-        budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed;
+        // находит сумму всех зарплат
+        budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() -
+                (budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed);
 
         prettyTable.addRow(String.valueOf(budgetRep.getByBudgetAllocation("Salary budget").getExpenses()),
                 String.valueOf(budgetThatUsed));
@@ -96,31 +96,45 @@ public class DirektorService {
 
         while (true){
 
+            double budgetThatUsed = 0;
+
             // вводим новый бюджет
             System.out.print("Введите новую бюджет для зароботной платы: ");
             double newBudgtForSalary = scanner.nextDouble();
 
+            // получает весь список сотрудников и через employee.getSalary() суммирует общюю сумму
+            for (Employee employee : employeeRep.getAllEmployee()) {
+                budgetThatUsed += employee.getSalary();
+            }
+
+            // находит сумму всех зарплат
+            budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() -
+                    (budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed);
+
             // проверка (общий бюджет > (прочие расходы + новый бюджет для зп)) если true то новый бюджет записывается в бд
             if(budgetRep.getByBudgetAllocation("Total budget").getExpenses() >=
                     (budgetRep.getByBudgetAllocation("Actual expenses").getExpenses() + newBudgtForSalary)){
-                budgetRep.updateExpenses(2, newBudgtForSalary);
-                System.out.println("Новый бюджет успешно сохранен");
-                break;
+                if(newBudgtForSalary >= budgetThatUsed){
+                    budgetRep.updateExpenses(2, newBudgtForSalary);
+                    System.out.println("Новый бюджет успешно сохранен");
+                    break;
+                }else {
+                    System.out.println("Ошибка предлагаемый бюджет ниже используемого бюджета!");
+                }
 
             }else {
                 System.out.println("Ошибка бюджет зарплаты превышает общий бюджет. Общтий бюджет = " +
                         budgetRep.getByBudgetAllocation("Total budget").getExpenses());
             }
         }
-
     }
 
     public static void showReview (){
 
-        PrettyTable prettyTable = new PrettyTable("Отзыв", "Айди клиента");
+        PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
         for (int i = 0; i < reviewsRep.getAllReviews().size(); i++) {
             prettyTable.addRow(reviewsRep.getAllReviews().get(i).getReview(),
-                    String.valueOf(reviewsRep.getAllReviews().get(i).getIdClient()));
+                    String.valueOf(clientRep.getAllClient().get(i).getFullName()));
         }
         System.out.println(prettyTable);
     }
@@ -161,7 +175,6 @@ public class DirektorService {
                 System.out.println("Ошибка зарплата превышает выделеный бюджет");
             }
         }
-
     }
 
     public static void lowerSalary (){
@@ -173,7 +186,6 @@ public class DirektorService {
         System.out.print("Введите айди: ");
         // поиск по айди
         Employee employee = employeeRep.getById(scanner.nextInt());
-
 
         while (true){
 
@@ -194,16 +206,16 @@ public class DirektorService {
 
     public static void register (){
 
-        System.out.print("Введите данные работника" );
+        System.out.println("Введите данные работника" );
         // регистрация сотриднука
         System.out.println("Имя");
-        String fullName = scanner.nextLine();
+        String fullName = scanner.next();
         System.out.println("Логин");
-        String login = scanner.nextLine();
+        String login = scanner.next();
         System.out.println("Пароль");
-        String password = scanner.nextLine();
+        String password = scanner.next();
         System.out.println("Тип аккаунта");
-        String typeOfAccount = scanner.nextLine();
+        String typeOfAccount = scanner.next();
         System.out.println("Зарабатную плату");
         double salary = scanner.nextDouble();
         Employee employeeAdd = new Employee(fullName, login, password, typeOfAccount, salary);
