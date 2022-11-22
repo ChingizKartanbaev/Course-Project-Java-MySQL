@@ -67,27 +67,36 @@ public class DirektorService {
         // выводит список зон покрытия
         PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
 
+        // через forEach в притти тейбл доболяется название города и прибыль с города
         reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),x.getCustomerCoverageArea()));
         System.out.println(prettyTable);
     }
 
     private static void budget() {
 
+        // переменная для храниения общего бюджета
         double budgetThatUsed = 0;
+        double budgetThatIsNotUsed = 0;
 
-        PrettyTable prettyTable = new PrettyTable("Общий бюджет необходимый для зарплаты", "Используемы бюджет");
+        PrettyTable prettyTable = new PrettyTable("Общий бюджет необходимый для зарплаты", "Используемы бюджет",
+                "Не использованый бюджет");
 
         // получает весь список сотрудников и через employee.getSalary() суммирует общюю сумму
         for (Employee employee : employeeRep.getAllEmployee()) {
             budgetThatUsed += employee.getSalary();
         }
 
-        // находит сумму всех зарплат
+        // находит используемый бюджет
         budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() -
                 (budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed);
 
+        // находит свободнный бюджет
+        budgetThatIsNotUsed += budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed;
+
+
+        // через forEach в притти тейбл доболяется общтий бюджет для зарплаты и используемый бюджет
         prettyTable.addRow(String.valueOf(budgetRep.getByBudgetAllocation("Salary budget").getExpenses()),
-                String.valueOf(budgetThatUsed));
+                String.valueOf(budgetThatUsed), String.valueOf(budgetThatIsNotUsed));
 
         System.out.println(prettyTable);
     }
@@ -118,6 +127,7 @@ public class DirektorService {
                     budgetRep.updateExpenses(2, newBudgtForSalary);
                     System.out.println("Новый бюджет успешно сохранен");
                     break;
+
                 }else {
                     System.out.println("Ошибка предлагаемый бюджет ниже используемого бюджета!");
                 }
@@ -131,11 +141,12 @@ public class DirektorService {
 
     public static void showReview (){
 
+        // в таблицу добовляет хэдер
         PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
-        for (int i = 0; i < reviewsRep.getAllReviews().size(); i++) {
-            prettyTable.addRow(reviewsRep.getAllReviews().get(i).getReview(),
-                    String.valueOf(clientRep.getAllClient().get(i).getFullName()));
-        }
+
+        // в таблицу добовляет отзыв и имя клиента
+        reviewsRep.getAllReviews().forEach(x -> prettyTable.addRow(x.getReview(),
+                clientRep.getClientById(x.getIdClient()).getFullName()));
         System.out.println(prettyTable);
     }
 

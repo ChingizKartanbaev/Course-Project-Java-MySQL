@@ -78,6 +78,7 @@ public class Authorization {
                                         clientRep.getAllClient().get(i).getPassword().equals(password)){
                                     System.out.println("Добро пожаловать " + clientRep.getAllClient().get(i).getFullName());
                                     ClientService.clientMenu();
+                                    break loop;
                                 }
                             }
                         }
@@ -90,6 +91,7 @@ public class Authorization {
                             CorseProject.models.Client clientAdd = new Client(fullName, login, password);
                             // запись данных в бд
                             clientRep.createClient(clientAdd);
+                            authotization();
                         }
                     }
                 }

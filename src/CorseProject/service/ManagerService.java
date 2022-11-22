@@ -17,7 +17,7 @@ public class ManagerService {
     public static Scanner scanner = new Scanner(System.in);
 
 
-    public static void managerMenu (){
+    public static void managerMenu() {
 
         loop:
         while (true){
@@ -27,24 +27,29 @@ public class ManagerService {
                 1 - Показать список сотрудников
                 2 - Посмотреть отзывы
                 3 - Показать список заказов
-                4 - Ввести задания для сотрудников
-                5 - Показать список всех зон покрытия
-                6 - Выход
+                4 - Показать список завершеных закаов
+                5 - Ввести задания для сотрудников
+                6 - Показать список заданий для сотрудников
+                7 - Показать список всех зон покрытия
+                8 - Выход
                 """);
 
-            switch (scanner.nextInt()){
+            switch (scanner.nextInt()) {
 
                 case 1 -> System.out.println(showEmployee());
                 case 2 -> System.out.println(showReview());
                 case 3 -> System.out.println("a");
-                case 4 -> writeTaskForEmployee();
-                case 5 -> System.out.println(showAListOfAllCoverageAreas());
-                case 6 -> {break loop;}
+                case 4 -> System.out.println("b");
+                case 5 -> writeTaskForEmployee();
+                case 6 -> System.out.println(showTaskForEmployee());
+                case 7 -> System.out.println(showAListOfAllCoverageAreas());
+                case 8 -> {break loop;}
+                default -> System.out.println("Данные введены не котректно");
             }
         }
     }
 
-    public static PrettyTable showEmployee (){
+    public static PrettyTable showEmployee() {
 
         // Создание притти тейбл и добавление хедера
         PrettyTable prettyTable = new PrettyTable("Айди","ФИО","Тип аккаунта");
@@ -56,7 +61,7 @@ public class ManagerService {
         return prettyTable;
     }
 
-    public static PrettyTable showReview (){
+    public static PrettyTable showReview() {
 
         // Создание притти тейбл и добавление хедера
         PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
@@ -67,8 +72,7 @@ public class ManagerService {
         return prettyTable;
     }
 
-
-    private static void writeTaskForEmployee (){
+    private static void writeTaskForEmployee() {
         // заглушка что-бы работал сканннер
         String s = scanner.nextLine();
 
@@ -101,7 +105,17 @@ public class ManagerService {
         }
     }
 
-    public static PrettyTable showAListOfAllCoverageAreas (){
+    public static PrettyTable showTaskForEmployee() {
+        PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
+
+        tasksRep.getAllTasks().forEach(x -> prettyTable.addRow(x.getTask(),String.valueOf(x.getIdEmployee()),
+                employeeRep.getById(x.getIdEmployee()).getFullName()));
+
+        return prettyTable;
+    }
+
+
+    public static PrettyTable showAListOfAllCoverageAreas() {
 
         // выводит список зон покрытия
         PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
