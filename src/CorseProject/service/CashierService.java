@@ -37,7 +37,7 @@ public class CashierService {
                 case 3 -> completeTask();
                 case 4 -> System.out.println("wd");
                 case 5 -> System.out.println("g");
-                case 6 -> System.out.println("w");
+                case 6 -> System.out.println(showSalary());
                 case 7 -> {
                     System.out.println("Выход");
                     break loop;
@@ -91,6 +91,16 @@ public class CashierService {
             case 2 -> System.out.println("Выполните задание");
             default -> System.out.println("Ошибка");
         }
+    }
 
+    public static PrettyTable showSalary() {
+        PrettyTable prettyTable = new PrettyTable("ФИО","Зарплата");
+        System.out.print("Введите свой айди: ");
+        long idEmployee = scanner.nextLong();
+
+        prettyTable.addRow(employeeRep.getById(idEmployee).getFullName(),
+                String.valueOf(employeeRep.getById(idEmployee).getSalary()));
+
+        return  prettyTable;
     }
 }

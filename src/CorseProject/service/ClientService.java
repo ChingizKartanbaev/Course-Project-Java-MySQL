@@ -23,15 +23,14 @@ public class ClientService {
                     1 - Сделать заказ
                     2 - Проверить заказ
                     3 - Оставить Отзыв
-                    5 - Выход
+                    4 - Выход
                     """);
 
             switch (scanner.nextInt()){
                 case 1 -> System.out.println("Сделать заказ");
-                case 2 -> System.out.println("Проверить заказ");
+                case 2 -> System.out.println( "Проверить заказ");
                 case 3 -> writeReview();
-                case 4 -> System.out.println("");
-                case 5 -> {
+                case 4 -> {
                     System.out.println("Выход");
                     break loop;
                 }

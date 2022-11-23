@@ -6,6 +6,5 @@ public class Main {
         Authorization authorization = new Authorization();
         authorization.authotization();
 
-
     }
 }
