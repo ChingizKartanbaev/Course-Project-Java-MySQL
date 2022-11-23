@@ -17,10 +17,6 @@ public class Const {
     public static final String CLIENT_PASSWORD = "passwords";
 
 
-    public static final String FINISHEDORDERS_TABLE = "finishedorders";
-    public static final String FINISHEDORDERS_ID = "idFinishedOrders";
-    public static final String FINISHEDORDERS_IDORDERS = "idOrders";
-
     public static final String ORDERS_TABLE = "orders";
     public static final String ORDERS_ID = "idOrders";
     public static final String ORDERS_IDCLIENT = "idClient";
@@ -45,7 +41,7 @@ public class Const {
 
     public static final String TASKS_TABLE = "tasks";
     public static final String TASKS_ID = "idTasks";
-    public static final String TASKS_TASK = "Task";
+    public static final String TASKS_TASK = "task";
     public static final String TASKS_IDEMPLOYEE = "idEmployee";
-
+    public static final String TASKS_PROCESS = "process";
 }

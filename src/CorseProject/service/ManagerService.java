@@ -1,5 +1,6 @@
 package CorseProject.service;
 
+import CorseProject.models.enums.BdProcess;
 import CorseProject.dao.*;
 import CorseProject.dao.impl.*;
 import CorseProject.models.Tasks;
@@ -10,7 +11,6 @@ import java.util.Scanner;
 public class ManagerService {
 
     public static EmployeeRep employeeRep = new EmployeeRepImpl();
-    public static ClientRep clientRep = new ClientRepImpl();
     public static ReviewsRep reviewsRep = new ReviewsRepImpl();
     public static ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
     public static TasksRep tasksRep = new TasksRepImpl();
@@ -30,8 +30,9 @@ public class ManagerService {
                 4 - Показать список завершеных закаов
                 5 - Ввести задания для сотрудников
                 6 - Показать список заданий для сотрудников
-                7 - Показать список всех зон покрытия
-                8 - Выход
+                7 - Показать список выполненых заданий для сотрудников
+                8 - Показать список всех зон покрытия
+                9 - Выход
                 """);
 
             switch (scanner.nextInt()) {
@@ -42,8 +43,9 @@ public class ManagerService {
                 case 4 -> System.out.println("b");
                 case 5 -> writeTaskForEmployee();
                 case 6 -> System.out.println(showTaskForEmployee());
-                case 7 -> System.out.println(showAListOfAllCoverageAreas());
-                case 8 -> {break loop;}
+                case 7 -> showFinishedTask();
+                case 8 -> System.out.println(showAListOfAllCoverageAreas());
+                case 9 -> {break loop;}
                 default -> System.out.println("Данные введены не котректно");
             }
         }
@@ -95,7 +97,7 @@ public class ManagerService {
             if(employeeRep.getByTypeOfAccount("Direktor").getId() != idEmployee &&
                     employeeRep.getByTypeOfAccount("Manager").getId() != idEmployee){
 
-                Tasks tasks = new Tasks(task, idEmployee);
+                Tasks tasks = new Tasks(task, idEmployee, BdProcess.RUNNING);
                 // запись в бд
                 tasksRep.createTasks(tasks);
 
@@ -106,14 +108,37 @@ public class ManagerService {
     }
 
     public static PrettyTable showTaskForEmployee() {
+
         PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
 
-        tasksRep.getAllTasks().forEach(x -> prettyTable.addRow(x.getTask(),String.valueOf(x.getIdEmployee()),
-                employeeRep.getById(x.getIdEmployee()).getFullName()));
-
+        for (int i = 0; i < tasksRep.getAllTasks().size(); i++) {
+            
+            if(tasksRep.getAllTasks().get(i).getProcess().equals("RUNNING")){
+                prettyTable.addRow(tasksRep.getAllTasks().get(i).getTask(),
+                        String.valueOf(tasksRep.getAllTasks().get(i).getIdEmployee()),
+                        employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
+            }
+        }
         return prettyTable;
     }
 
+
+    public static void showFinishedTask() {
+
+        PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
+
+        for (int i = 0; i < tasksRep.getAllTasks().size(); i++) {
+            if(tasksRep.getAllTasks().get(i).getProcess().equals("FINISHED")){
+                prettyTable.addRow(tasksRep.getAllTasks().get(i).getTask(),
+                        String.valueOf(tasksRep.getAllTasks().get(i).getIdEmployee()),
+                        employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
+                System.out.println(prettyTable);
+            }else {
+                System.out.println("Задания ещё не выполнены");
+                break;
+            }
+        }
+    }
 
     public static PrettyTable showAListOfAllCoverageAreas() {
 

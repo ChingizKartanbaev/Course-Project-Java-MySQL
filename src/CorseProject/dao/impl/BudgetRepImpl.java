@@ -82,6 +82,7 @@ public class BudgetRepImpl implements BudgetRep {
 
     @Override
     public void updateExpenses(int id, double money) {
+
         String update = "UPDATE " + Const.BUDGET_TABLE + " set " + Const.BUDGET_EXPENSES
                 + "=? WHERE " + Const.BUDGET_ID + "=?";
 

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class ClientService {
 
+
     private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -22,14 +23,15 @@ public class ClientService {
                     1 - Сделать заказ
                     2 - Проверить заказ
                     3 - Оставить Отзыв
-                    4 - Выход
+                    5 - Выход
                     """);
 
             switch (scanner.nextInt()){
                 case 1 -> System.out.println("Сделать заказ");
                 case 2 -> System.out.println("Проверить заказ");
                 case 3 -> writeReview();
-                case 4 -> {
+                case 4 -> System.out.println("");
+                case 5 -> {
                     System.out.println("Выход");
                     break loop;
                 }
@@ -40,9 +42,6 @@ public class ClientService {
     }
 
 
-    public static void makeOrder() {
-
-    }
 
     public static void writeReview() {
 
@@ -75,4 +74,5 @@ public class ClientService {
             }
         }
     }
+
 }
