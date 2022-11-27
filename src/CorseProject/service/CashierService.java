@@ -16,6 +16,7 @@ public class CashierService {
     private static final Scanner scanner = new Scanner(System.in);
     public static void cashierMenu() {
 
+        //TODO меню 4, 5
         loop:
         while (true){
 
@@ -39,7 +40,7 @@ public class CashierService {
                 case 5 -> System.out.println("g");
                 case 6 -> System.out.println(showSalary());
                 case 7 -> {
-                    System.out.println("Выход");
+                    System.out.println("Программа завершена, мы будем рады вашему возвращению!");
                     break loop;
                 }
                 default -> System.out.println("Данные введены не котректно");

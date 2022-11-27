@@ -97,7 +97,7 @@ public class BudgetRepImpl implements BudgetRep {
         }
     }
 
-    //доделать
+    //TODO закончить
     @Override
     public void deleteBudget(long id) {
 

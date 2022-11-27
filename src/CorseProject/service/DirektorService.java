@@ -54,7 +54,7 @@ public class DirektorService {
                 case 8 -> delete();
 
                 case 9 -> {
-                    System.out.println("До свидания!");
+                    System.out.println("Программа завершена, мы будем рады вашему возвращению!");
                     break loop;
                 }
 
@@ -154,14 +154,21 @@ public class DirektorService {
 
         double salaryThatUsed = 0;
 
+        // сумма всех зарплат
+        for (Employee employee1 : employeeRep.getAllEmployee()) {
+            salaryThatUsed += employee1.getSalary();
+        }
+
         // выводим список всех работников
         for (Employee employee : employeeRep.getAllEmployee()) {
             System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
         }
         System.out.print("Введите айди: ");
+        long idEmployee = scanner.nextLong();
 
+        salaryThatUsed -= employeeRep.getById(idEmployee).getSalary();
         // поиск по айди
-        Employee employee = employeeRep.getById(scanner.nextInt());
+        Employee employee = employeeRep.getById(idEmployee);
 
         while (true){
             // ввод сумм и подсчет новой заработной платы;
@@ -169,21 +176,17 @@ public class DirektorService {
             double upSalary = scanner.nextDouble();
             double refreshSalary = employee.getSalary() + upSalary;
 
-            // сумма всех зарплат
-            for (Employee employee1 : employeeRep.getAllEmployee()) {
-                salaryThatUsed = employee1.getSalary();
-            }
-
             // проверка на повышение зарплаты, зп должна быть не больше выделеного бюджета
-            if(budgetRep.getByBudgetAllocation("Salary budget").getExpenses() > (refreshSalary
-                    + salaryThatUsed)){
+            if(budgetRep.getByBudgetAllocation("Salary budget").getExpenses() > (refreshSalary + salaryThatUsed)){
                 // запись в бд
                 employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
                 System.out.println("Зарплата была повышена");
+                salaryThatUsed = 0;
                 break;
 
             }else {
                 System.out.println("Ошибка зарплата превышает выделеный бюджет");
+                salaryThatUsed = 0;
             }
         }
     }

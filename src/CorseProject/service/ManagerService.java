@@ -45,7 +45,10 @@ public class ManagerService {
                 case 6 -> System.out.println(showTaskForEmployee());
                 case 7 -> showFinishedTask();
                 case 8 -> System.out.println(showAListOfAllCoverageAreas());
-                case 9 -> {break loop;}
+                case 9 -> {
+                    System.out.print("Программа завершена, мы будем рады вашему возвращению!");
+                    break loop;
+                }
                 default -> System.out.println("Данные введены не котректно");
             }
         }
@@ -111,14 +114,11 @@ public class ManagerService {
 
         PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
 
-        for (int i = 0; i < tasksRep.getAllTasks().size(); i++) {
-            
-            if(tasksRep.getAllTasks().get(i).getProcess().equals("RUNNING")){
-                prettyTable.addRow(tasksRep.getAllTasks().get(i).getTask(),
-                        String.valueOf(tasksRep.getAllTasks().get(i).getIdEmployee()),
-                        employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
-            }
-        }
+        // через потоки фильтруем по "RUNNING" если полученные данные соответсвуют условию они добавляются в притти тебйл
+        tasksRep.getAllTasks().stream().filter(x -> x.getProcess().equals("RUNNING")).forEach(x ->
+                prettyTable.addRow(x.getTask(), String.valueOf(x.getIdEmployee()),
+                        employeeRep.getById(x.getIdEmployee()).getFullName()));
+
         return prettyTable;
     }
 
@@ -127,17 +127,12 @@ public class ManagerService {
 
         PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
 
-        for (int i = 0; i < tasksRep.getAllTasks().size(); i++) {
-            if(tasksRep.getAllTasks().get(i).getProcess().equals("FINISHED")){
-                prettyTable.addRow(tasksRep.getAllTasks().get(i).getTask(),
-                        String.valueOf(tasksRep.getAllTasks().get(i).getIdEmployee()),
-                        employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
-                System.out.println(prettyTable);
-            }else {
-                System.out.println("Задания ещё не выполнены");
-                break;
-            }
-        }
+        // через потоки фильтруем по "FINISHED" если полученные данные соответсвуют условию они добавляются в притти тебйл
+        tasksRep.getAllTasks().stream().filter(x -> x.getProcess().equals("FINISHED")).forEach(x ->
+                prettyTable.addRow(x.getTask(), String.valueOf(x.getIdEmployee()),
+                        employeeRep.getById(x.getIdEmployee()).getFullName()));
+
+        System.out.println(prettyTable);
     }
 
     public static PrettyTable showAListOfAllCoverageAreas() {

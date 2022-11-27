@@ -17,31 +17,33 @@ public class Const {
     public static final String CLIENT_PASSWORD = "passwords";
 
 
-    public static final String ORDERS_TABLE = "orders";
-    public static final String ORDERS_ID = "idOrders";
-    public static final String ORDERS_IDCLIENT = "idClient";
-    public static final String ORDERS_IDEMPLOYEE = "idEmployee";
-    public static final String ORDERS_ORDER = "order";
-    public static final String ORDERS_COST = "cost";
-
     public static final String REPORRMANAGER_TABLE = "reportmanager";
     public static final String REPORRMANAGER_ID = "idReportManager";
     public static final String REPORRMANAGER_CITYNAME = "cityName";
     public static final String REPORRMANAGER_CUSTOMERCOVERAGEAREA = "customerCoverageArea";
+
 
     public static final String REVIEWS_TABLE = "reviews";
     public static final String REVIEWS_ID = "idReviews";
     public static final String REVIEWS_REVIEW = "review";
     public static final String REVIEWS_IDCLIENT = "idClient";
 
+
     public static final String BUDGET_TABLE = "budget";
     public static final String BUDGET_ID = "idbudget";
     public static final String BUDGET_BUDGETALLOCATION = "budgetAllocation";
     public static final String BUDGET_EXPENSES = "expenses";
+
 
     public static final String TASKS_TABLE = "tasks";
     public static final String TASKS_ID = "idTasks";
     public static final String TASKS_TASK = "task";
     public static final String TASKS_IDEMPLOYEE = "idEmployee";
     public static final String TASKS_PROCESS = "process";
+
+
+    //TODO закончить
+    public static final String PRODUCTS_TABLE = "products";
+    public static final String PRODUCT_ID = "idProducts";
+    public static final String PRODUCT_NAME = "name";
 }
