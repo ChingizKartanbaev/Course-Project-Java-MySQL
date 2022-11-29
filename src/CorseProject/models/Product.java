@@ -49,4 +49,9 @@ public  class Product {
     public void setCategories(Categories categories) {
         this.categories = categories;
     }
+
+    @Override
+    public String toString() {
+        return idProduct + "" + name + " " + cost + " " + categories;
+    }
 }

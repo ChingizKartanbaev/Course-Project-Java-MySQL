@@ -1,10 +1,14 @@
 package CorseProject.service;
 
+import CorseProject.dao.OrderRep;
+import CorseProject.dao.impl.OrderRepImpl;
 import CorseProject.dao.ProductRep;
 import CorseProject.dao.impl.ProductRepImp;
 import CorseProject.dao.ReviewsRep;
 import CorseProject.dao.impl.ReviewsRepImpl;
+import CorseProject.models.Basket;
 import CorseProject.models.Reviews;
+import CorseProject.models.enums.BdProcess;
 import CorseProject.models.enums.Categories;
 import CorseProject.utils.*;
 
@@ -12,13 +16,12 @@ import java.util.*;
 
 public class ClientService {
 
-
     private static final ProductRepImp productRep = new ProductRepImp();
-
+    private static final OrderRep orderRep = new OrderRepImpl();
     private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void clientMenu() {
+    public static void clientMenu(long idClient) {
 
         //TODO меню 1, 2
         loop:
@@ -34,7 +37,7 @@ public class ClientService {
                     """);
 
             switch (scanner.nextInt()){
-                case 1 -> makeOrder();
+                case 1 -> makeOrder(idClient);
                 case 2 -> System.out.println("Проверить заказ");
                 case 3 -> writeReview();
                 case 4 -> {
@@ -48,14 +51,18 @@ public class ClientService {
     }
 
 
-    public static void makeOrder() {
+    public static void makeOrder(long idClient) {
+        PrettyTable tableOfBasket = new PrettyTable("Наименование продукта", "Количество", "Стоимость");
+        ArrayList<Basket> baskets = new ArrayList<>();
 
         loop:
         while (true) {
             System.out.println("""
                     1 - посмотреть все меню
                     2 - посмотреть по категории
-                    3 - завершить""");
+                    3 - Добавить в карзину
+                    4 - Завершить""");
+
             switch (scanner.nextInt()) {
                 case 1 -> {
                     PrettyTable prettyTable = new PrettyTable("Айди", "Название пробукта", "Стоимость");
@@ -82,32 +89,46 @@ public class ClientService {
                         default -> System.out.println("Ошибка");
                     }
                 }
-                default -> System.out.println("Ошибка");
+
                 case 3 -> {
+                    System.out.print("Введите id продукта: ");
+                    long idProduct = scanner.nextLong();
+
+                    System.out.print("Введите количество");
+                    int amountOfProduct = scanner.nextInt();
+
+                    double totalCost = amountOfProduct * productRep.getProductById(idProduct).getCost();
+
+                    Basket basket = new Basket((int) idClient, productRep.getProductById(idProduct).getName(), amountOfProduct,
+                            totalCost, totalCost, BdProcess.RUNNING);
+
+                    baskets.add(basket);
+
+                    tableOfBasket.addRow(basket.getOrder(), String.valueOf(basket.getAmount()),
+                            String.valueOf(basket.getTotalCost()));
+
+                    System.out.println(tableOfBasket);
+                }
+                case 4 -> {
                     break loop;
+                }
+
+                default -> {
+                    System.out.println("Ошибка");
+                    continue;
                 }
             }
 
+            orderRep.createOrder(baskets);
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
     public static PrettyTable choseByCategory(Categories categories) {
-        // Создаем притти тейбл и добавляем хедер
+        // Create a pretty table and add a header
         PrettyTable prettyTable = new PrettyTable( "Айди", "Название пробукта", "Стоимость");
         ProductRep productRep = new ProductRepImp();
 
-        // Через цикл пробегаемся по массиву
+            // Through the loop we run through the array
         for (int i = 0; i < productRep.getAllProduct().size(); i++) {
             //
             if(productRep.getAllProduct().get(i).getCategories().equals(categories)){
@@ -133,7 +154,7 @@ public class ClientService {
 
             if (reviewThatWriteClient.isEmpty()) {
                 System.out.println("Error");
-                // заглушка
+                // plug
                 String s = scanner.nextLine();
             }else {
 
@@ -142,7 +163,7 @@ public class ClientService {
                 } catch (Exception e){
 
                     System.out.println("Айди клиента не найден");
-                    // заглушка
+                    // plug
                     String s = scanner.nextLine();
                     writeReview();
                     break;

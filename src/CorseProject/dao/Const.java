@@ -35,6 +35,14 @@ public class Const {
     public static final String BUDGET_EXPENSES = "expenses";
 
 
+    public static final String ORDER_TABLE = "orders";
+    public static final String ORDER_ID = "idOrders";
+    public static final String ORDER_IDCLIENT = "idClient";
+    public static final String ORDER_ORDER = "orders";
+    public static final String ORDER_COST = "cost";
+    public static final String ORDER_PROGRESS = "progress";
+
+
     public static final String TASKS_TABLE = "tasks";
     public static final String TASKS_ID = "idTasks";
     public static final String TASKS_TASK = "task";
