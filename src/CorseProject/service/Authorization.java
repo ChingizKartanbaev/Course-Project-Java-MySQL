@@ -23,20 +23,20 @@ public class Authorization {
             switch (scanner.nextInt()){
 
                 case 1 -> {
-                    // авторизация для сотрудника
-                    // вводится пароль и логин сотрудника
+                    // authorization for an employee
+                    // the employee's password and login are entered
                     Scanner scanner = new Scanner(System.in);
                     System.out.print("Введите логин: ");
                     String login = scanner.nextLine();
                     System.out.print("Введите пароль: ");
                     String password = scanner.nextLine();
 
-                    // получаем список всех работников
+                    // we get a list of all employees
                     for (int i = 0; i < employeeRep.getAllEmployee().size(); i++) {
-                        // проверяем введеные данные с данными которые хранятся в бд
+                        // we check the entered data with the data stored in the database
                         if(employeeRep.getAllEmployee().get(i).getLogin().equals(login) &&
                                 employeeRep.getAllEmployee().get(i).getPassword().equals(password)){
-                            //берется тип аккаунта и через switch проверяет совпадения
+                            // the account type is taken and checks for matches via switch
                             switch (employeeRep.getAllEmployee().get(i).getTypeOfAccount()){
                                 case "Direktor" -> {System.out.println("\nДобро пожаловать: " +
                                         employeeRep.getAllEmployee().get(i).getFullName());
@@ -50,7 +50,7 @@ public class Authorization {
                                 }
                                 case "Cashier" -> {System.out.println("\nДобро пожаловать: " +
                                         employeeRep.getAllEmployee().get(i).getFullName());
-                                    CashierService.cashierMenu();
+                                    CashierService.cashierMenu(employeeRep.getAllEmployee().get(i).getId());
                                     break loop;
                                 }
                             }
@@ -64,32 +64,35 @@ public class Authorization {
 
                     switch (scanner.nextInt()){
                         case 1 -> {
-                            // авторизация для клиента
-                            // ввод данных
+                            // authorization for the client
+                            // data entry
                             System.out.print("Введите логин: ");
                             String login = scanner.next();
                             System.out.print("Введите пароль: ");
                             String password = scanner.next();
 
-                            // получаем список всех работников
+                            // we get a list of all employees
                             for (int i = 0; i < clientRep.getAllClient().size(); i++) {
-                                // проверяем введеные данные с данными которые хранятся в бд
+                                // we check the entered data with the data stored in the database
                                 if(clientRep.getAllClient().get(i).getLogin().equals(login) &&
                                         clientRep.getAllClient().get(i).getPassword().equals(password)){
                                     System.out.println("Добро пожаловать " + clientRep.getAllClient().get(i).getFullName());
-                                    ClientService.clientMenu();
+                                    ClientService.clientMenu(clientRep.getAllClient().get(i).getId());
                                     break loop;
                                 }
                             }
                         }
                         case 2 -> {
-                            //регистрация клиента
+                            // client registration
                             Scanner scanner = new Scanner(System.in);
+                            System.out.println("ФИО");
                             String fullName = scanner.nextLine();
+                            System.out.println("Логин");
                             String login = scanner.nextLine();
+                            System.out.println("Пароль");
                             String password = scanner.nextLine();
                             CorseProject.models.Client clientAdd = new Client(fullName, login, password);
-                            // запись данных в бд
+                            // writing data to the database
                             clientRep.createClient(clientAdd);
                             authotization();
                         }

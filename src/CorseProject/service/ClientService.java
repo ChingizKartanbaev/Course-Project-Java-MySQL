@@ -23,7 +23,7 @@ public class ClientService {
 
     public static void clientMenu(long idClient) {
 
-        //TODO меню 1, 2
+        //TODO меню проверить заказ
         loop:
         while (true) {
 
@@ -38,7 +38,7 @@ public class ClientService {
 
             switch (scanner.nextInt()){
                 case 1 -> makeOrder(idClient);
-                case 2 -> System.out.println("Проверить заказ");
+                case 2 -> checkOrder();
                 case 3 -> writeReview();
                 case 4 -> {
                     System.out.println("Программа завершена, мы будем рады вашему возвращению!");
@@ -141,34 +141,39 @@ public class ClientService {
     }
 
 
-    public static void writeReview() {
 
-        while (true){
-            System.out.println("Напишите отзыв: ");
-            String reviewThatWriteClient = scanner.nextLine();
+    public static void checkOrder(){
+        boolean flag = false;
 
-            System.out.println("Введите свой айди");
-            int clientId = scanner.nextInt();
+        System.out.print("Введите свой id: ");
+        int num = scanner.nextInt();
 
-            Reviews reviews = new Reviews(reviewThatWriteClient, clientId);
-
-            if (reviewThatWriteClient.isEmpty()) {
-                System.out.println("Error");
-                // plug
-                String s = scanner.nextLine();
-            }else {
-
-                try {
-                    reviewsRep.createReview(reviews);
-                } catch (Exception e){
-
-                    System.out.println("Айди клиента не найден");
-                    // plug
-                    String s = scanner.nextLine();
-                    writeReview();
-                    break;
-                }
+        for (int i = 0; i < orderRep.getAllOrders().size(); i++) {
+            if(orderRep.getAllOrders().get(i).getIdClient() == num
+                    && String.valueOf(orderRep.getAllOrders().get(i).getBdProcess()).equals("FINISHED")){
+                flag = true;
             }
         }
+
+        if(flag){
+            System.out.println("Ваш заказ готов");
+        }else {
+            System.out.println("Ваш заказ еще не готов");
+        }
+    }
+
+
+
+    public static void writeReview() {
+
+        System.out.println("Напишите отзыв: ");
+        String reviewThatWriteClient = scanner.nextLine();
+
+        System.out.println("Введите свой айди");
+        int clientId = scanner.nextInt();
+
+        Reviews reviews = new Reviews(reviewThatWriteClient, clientId);
+
+        reviewsRep.createReview(reviews);
     }
 }

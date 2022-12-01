@@ -39,6 +39,7 @@ public class Const {
     public static final String ORDER_ID = "idOrders";
     public static final String ORDER_IDCLIENT = "idClient";
     public static final String ORDER_ORDER = "orders";
+    public static final String ORDER_AMOUNT = "amount";
     public static final String ORDER_COST = "cost";
     public static final String ORDER_PROGRESS = "progress";
 

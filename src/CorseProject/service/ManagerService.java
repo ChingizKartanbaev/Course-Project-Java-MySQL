@@ -1,5 +1,6 @@
 package CorseProject.service;
 
+import CorseProject.models.Basket;
 import CorseProject.models.enums.BdProcess;
 import CorseProject.dao.*;
 import CorseProject.dao.impl.*;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 
 public class ManagerService {
 
+    public static OrderRep orderRep = new OrderRepImpl();
     public static EmployeeRep employeeRep = new EmployeeRepImpl();
     public static ReviewsRep reviewsRep = new ReviewsRepImpl();
     public static ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
@@ -39,8 +41,8 @@ public class ManagerService {
 
                 case 1 -> System.out.println(showEmployee());
                 case 2 -> System.out.println(showReview());
-                case 3 -> System.out.println("a");
-                case 4 -> System.out.println("b");
+                case 3 -> showUnprocessedOrders();
+                case 4 -> showFinishedOrders();
                 case 5 -> writeTaskForEmployee();
                 case 6 -> System.out.println(showTaskForEmployee());
                 case 7 -> showFinishedTask();
@@ -54,54 +56,90 @@ public class ManagerService {
         }
     }
 
+
+
     public static PrettyTable showEmployee() {
 
-        // Создание притти тейбл и добавление хедера
+        // Creating a come table and adding a header
         PrettyTable prettyTable = new PrettyTable("Айди","ФИО","Тип аккаунта");
 
-        // добавленние в притти тейбл айди работника, ФИО, тип аккаунта
+        // adding an employee, full name, account type to the pretty table
         employeeRep.getAllEmployee().forEach(x -> prettyTable.addRow(String.valueOf(x.getId()),x.getFullName(),
                 x.getTypeOfAccount()));
 
         return prettyTable;
     }
 
+
+
     public static PrettyTable showReview() {
 
-        // Создание притти тейбл и добавление хедера
+        // Creating a come table and adding a header
         PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
 
-        // Через любду функции добовляем в притти тейбл отзыв и айди клиента
+        // Through the people of the function, we add a review and a client's ID to the pritti table
         reviewsRep.getAllReviews().forEach(x -> prettyTable.addRow(x.getReview(), String.valueOf(x.getIdClient())));
 
         return prettyTable;
     }
 
+
+
+    public static void showUnprocessedOrders() {
+        PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость");
+
+        for (Basket basket : orderRep.getAllOrders()) {
+            if(String.valueOf(basket.getBdProcess()).equals("RUNNING")){
+                prettyTable.addRow(String.valueOf(basket.getIdClient()), basket.getOrder(), String.valueOf(basket.getAmount()),
+                        String.valueOf(basket.getCost()));
+            }
+        }
+
+        System.out.println(prettyTable);
+    }
+
+
+
+    public static void showFinishedOrders() {
+        PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость");
+
+        for (Basket basket : orderRep.getAllOrders()) {
+            if(String.valueOf(basket.getBdProcess()).equals("FINISHED")){
+                prettyTable.addRow(String.valueOf(basket.getIdClient()), basket.getOrder(), String.valueOf(basket.getAmount()),
+                        String.valueOf(basket.getCost()));
+            }
+        }
+
+        System.out.println(prettyTable);
+    }
+
+
+
     private static void writeTaskForEmployee() {
-        // заглушка что-бы работал сканннер
+        // plug
         String s = scanner.nextLine();
 
-        // вводятся задание для сотрудника
+        // the task for the employee is entered
         System.out.println("Введите задание для работника: ");
         String task = scanner.nextLine();
 
-        // вводится айди сотрудника
+        // the employee's ID is entered
         System.out.println("Введите айди работника: ");
         long idEmployee = scanner.nextLong();
 
-        // проверка на пустоту
+        // checking for emptiness
         if(task.isEmpty()){
 
             System.out.println("Нужно ввести данные");
 
         } else {
 
-            // проверка на тип аккаунта, так как мы не можем дать задание директору или же менеджеру
+            // checking for the type of account, since we cannot give a task to the director or manager
             if(employeeRep.getByTypeOfAccount("Direktor").getId() != idEmployee &&
                     employeeRep.getByTypeOfAccount("Manager").getId() != idEmployee){
 
                 Tasks tasks = new Tasks(task, idEmployee, BdProcess.RUNNING);
-                // запись в бд
+                // database entry
                 tasksRep.createTasks(tasks);
 
             }else {
@@ -110,11 +148,13 @@ public class ManagerService {
         }
     }
 
+
+
     public static PrettyTable showTaskForEmployee() {
 
         PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
 
-        // через потоки фильтруем по "RUNNING" если полученные данные соответсвуют условию они добавляются в притти тебйл
+        // through the streams, we filter by "RUNNING" if the received data meets the condition, they are added to the pretty table
         tasksRep.getAllTasks().stream().filter(x -> x.getProcess().equals("RUNNING")).forEach(x ->
                 prettyTable.addRow(x.getTask(), String.valueOf(x.getIdEmployee()),
                         employeeRep.getById(x.getIdEmployee()).getFullName()));
@@ -123,11 +163,12 @@ public class ManagerService {
     }
 
 
+
     public static void showFinishedTask() {
 
         PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
 
-        // через потоки фильтруем по "FINISHED" если полученные данные соответсвуют условию они добавляются в притти тебйл
+        // through the streams, we filter by "FINISHED" if the received data meets the condition, they are added to the pretty table
         tasksRep.getAllTasks().stream().filter(x -> x.getProcess().equals("FINISHED")).forEach(x ->
                 prettyTable.addRow(x.getTask(), String.valueOf(x.getIdEmployee()),
                         employeeRep.getById(x.getIdEmployee()).getFullName()));
@@ -135,12 +176,14 @@ public class ManagerService {
         System.out.println(prettyTable);
     }
 
+
+
     public static PrettyTable showAListOfAllCoverageAreas() {
 
-        // выводит список зон покрытия
+        // displays a list of coverage areas
         PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
 
-        // Через любду функции добовляем в притти тейбл отзыв название страны в и прибыль с данной странный
+        // Through the people of the function, we add to the pretty table a review of the name of the country in and the profit from this strange
         reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(), x.getCustomerCoverageArea()));
 
         return prettyTable;

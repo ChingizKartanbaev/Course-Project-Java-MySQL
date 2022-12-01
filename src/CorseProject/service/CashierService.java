@@ -1,9 +1,12 @@
 package CorseProject.service;
 
 import CorseProject.dao.EmployeeRep;
+import CorseProject.dao.OrderRep;
 import CorseProject.dao.TasksRep;
 import CorseProject.dao.impl.EmployeeRepImpl;
+import CorseProject.dao.impl.OrderRepImpl;
 import CorseProject.dao.impl.TasksRepImpl;
+import CorseProject.models.Basket;
 import CorseProject.models.enums.BdProcess;
 import CorseProject.utils.PrettyTable;
 
@@ -11,10 +14,11 @@ import java.util.Scanner;
 
 public class CashierService {
 
+    private static final OrderRep orderRep = new OrderRepImpl();
     private static final TasksRep tasksRep = new TasksRepImpl();
     private static final EmployeeRep employeeRep = new EmployeeRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
-    public static void cashierMenu() {
+    public static void cashierMenu(long idEmployee) {
 
         //TODO меню 4, 5
         loop:
@@ -23,9 +27,9 @@ public class CashierService {
             System.out.println("""
 
                     Выберете меню\s
-                    1 - Показать список порученных мне дел
+                    1 - Показать список порученных дел
                     2 - Показать список завершенных указаний
-                    3 - Выполнить порученое мне дело
+                    3 - Выполнить порученое дело
                     4 - Показать заказы, которые требуют обработки
                     5 - Обработать заказ
                     6 - Показать зарплату
@@ -36,9 +40,9 @@ public class CashierService {
                 case 1 -> System.out.println(showTaskForEmployee());
                 case 2 -> showFinishedTask();
                 case 3 -> completeTask();
-                case 4 -> System.out.println("wd");
-                case 5 -> System.out.println("g");
-                case 6 -> System.out.println(showSalary());
+                case 4 -> showUnprocessedOrders();
+                case 5 -> completeOrder();
+                case 6 -> System.out.println(showSalary(idEmployee));
                 case 7 -> {
                     System.out.println("Программа завершена, мы будем рады вашему возвращению!");
                     break loop;
@@ -47,6 +51,7 @@ public class CashierService {
             }
         }
     }
+
 
 
     public static PrettyTable showTaskForEmployee() {
@@ -61,8 +66,11 @@ public class CashierService {
                         employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
             }
         }
+
         return prettyTable;
     }
+
+
 
     public static void showFinishedTask() {
 
@@ -76,10 +84,11 @@ public class CashierService {
                 System.out.println(prettyTable);
             }else {
                 System.out.println("Задания ещё не выполнены");
-                break;
             }
         }
     }
+
+
 
     public static void completeTask() {
 
@@ -94,10 +103,38 @@ public class CashierService {
         }
     }
 
-    public static PrettyTable showSalary() {
+
+
+    public static void showUnprocessedOrders() {
+        PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость");
+
+        for (Basket basket : orderRep.getAllOrders()) {
+            if(String.valueOf(basket.getBdProcess()).equals("RUNNING")){
+                prettyTable.addRow(String.valueOf(basket.getIdClient()), basket.getOrder(), String.valueOf(basket.getAmount()),
+                        String.valueOf(basket.getCost()));
+            }
+        }
+
+        System.out.println(prettyTable);
+    }
+
+
+
+    public static void completeOrder() {
+        System.out.print("Введите id: ");
+        int id = scanner.nextInt();
+        System.out.print("Выполнили задание? (1 - да,2 - нет) ");
+
+        switch (scanner.nextInt()){
+            case 1 -> orderRep.updateOrder(id, String.valueOf(BdProcess.FINISHED));
+            case 2 -> System.out.println("Выполните задание");
+            default -> System.out.println("Ошибка");
+        }
+    }
+
+
+    public static PrettyTable showSalary(long idEmployee) {
         PrettyTable prettyTable = new PrettyTable("ФИО","Зарплата");
-        System.out.print("Введите свой айди: ");
-        long idEmployee = scanner.nextLong();
 
         prettyTable.addRow(employeeRep.getById(idEmployee).getFullName(),
                 String.valueOf(employeeRep.getById(idEmployee).getSalary()));

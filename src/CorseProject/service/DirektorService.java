@@ -64,37 +64,37 @@ public class DirektorService {
 
     public static void showAListOfAllCoverageAreas (){
 
-        // выводит список зон покрытия
+        // displays a list of coverage areas
         PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
 
-        // через forEach в притти тейбл доболяется название города и прибыль с города
+        // through forEach, the name of the city and the profit from the city are added to the pretty table
         reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),x.getCustomerCoverageArea()));
         System.out.println(prettyTable);
     }
 
     private static void budget() {
 
-        // переменная для храниения общего бюджета
+        // variable for storing the total budget
         double budgetThatUsed = 0;
         double budgetThatIsNotUsed = 0;
 
         PrettyTable prettyTable = new PrettyTable("Общий бюджет необходимый для зарплаты", "Используемы бюджет",
                 "Не использованый бюджет");
 
-        // получает весь список сотрудников и через employee.getSalary() суммирует общюю сумму
+        // gets the entire list of employees and through employee.getSalary() sums up the total amount
         for (Employee employee : employeeRep.getAllEmployee()) {
             budgetThatUsed += employee.getSalary();
         }
 
-        // находит используемый бюджет
+        // finds the budget used
         budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() -
                 (budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed);
 
-        // находит свободнный бюджет
+        // finds a free budget
         budgetThatIsNotUsed += budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed;
 
 
-        // через forEach в притти тейбл доболяется общтий бюджет для зарплаты и используемый бюджет
+        // through forEach, the general budget for the salary and the budget used are added to the pritty table
         prettyTable.addRow(String.valueOf(budgetRep.getByBudgetAllocation("Salary budget").getExpenses()),
                 String.valueOf(budgetThatUsed), String.valueOf(budgetThatIsNotUsed));
 
@@ -107,20 +107,20 @@ public class DirektorService {
 
             double budgetThatUsed = 0;
 
-            // вводим новый бюджет
+            // introducing a new budget
             System.out.print("Введите новую бюджет для зароботной платы: ");
             double newBudgtForSalary = scanner.nextDouble();
 
-            // получает весь список сотрудников и через employee.getSalary() суммирует общюю сумму
+            // gets the entire list of employees and through employee.getSalary() sums up the total amount
             for (Employee employee : employeeRep.getAllEmployee()) {
                 budgetThatUsed += employee.getSalary();
             }
 
-            // находит сумму всех зарплат
+            // finds the sum of all salaries
             budgetThatUsed = budgetRep.getByBudgetAllocation("Salary budget").getExpenses() -
                     (budgetRep.getByBudgetAllocation("Salary budget").getExpenses() - budgetThatUsed);
 
-            // проверка (общий бюджет > (прочие расходы + новый бюджет для зп)) если true то новый бюджет записывается в бд
+            // check (total budget > (other expenses + new budget for po)) if true, the new budget is written to the database
             if(budgetRep.getByBudgetAllocation("Total budget").getExpenses() >=
                     (budgetRep.getByBudgetAllocation("Actual expenses").getExpenses() + newBudgtForSalary)){
                 if(newBudgtForSalary >= budgetThatUsed){
@@ -141,10 +141,10 @@ public class DirektorService {
 
     public static void showReview (){
 
-        // в таблицу добовляет хэдер
+        // adds a header to the table
         PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
 
-        // в таблицу добовляет отзыв и имя клиента
+        // adds a review and the client's name to the table
         reviewsRep.getAllReviews().forEach(x -> prettyTable.addRow(x.getReview(),
                 clientRep.getClientById(x.getIdClient()).getFullName()));
         System.out.println(prettyTable);
@@ -154,12 +154,12 @@ public class DirektorService {
 
         double salaryThatUsed = 0;
 
-        // сумма всех зарплат
+        // the sum of all salaries
         for (Employee employee1 : employeeRep.getAllEmployee()) {
             salaryThatUsed += employee1.getSalary();
         }
 
-        // выводим список всех работников
+        // output a list of all employees
         for (Employee employee : employeeRep.getAllEmployee()) {
             System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
         }
@@ -167,18 +167,18 @@ public class DirektorService {
         long idEmployee = scanner.nextLong();
 
         salaryThatUsed -= employeeRep.getById(idEmployee).getSalary();
-        // поиск по айди
+        // id search
         Employee employee = employeeRep.getById(idEmployee);
 
         while (true){
-            // ввод сумм и подсчет новой заработной платы;
+            // entering amounts and calculating new wages
             System.out.print("Сумму на которуй вы хотите повысить: ");
             double upSalary = scanner.nextDouble();
             double refreshSalary = employee.getSalary() + upSalary;
 
-            // проверка на повышение зарплаты, зп должна быть не больше выделеного бюджета
+            // checking for a salary increase, the po should not be more than the allocated budget
             if(budgetRep.getByBudgetAllocation("Salary budget").getExpenses() > (refreshSalary + salaryThatUsed)){
-                // запись в бд
+                // database entry
                 employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
                 System.out.println("Зарплата была повышена");
                 salaryThatUsed = 0;
@@ -193,23 +193,23 @@ public class DirektorService {
 
     private static void lowerSalary (){
 
-        // выводим список всех работников
+        // output a list of all employees
         for (Employee employee : employeeRep.getAllEmployee()) {
             System.out.println(employee.getId() + " " + employee.getFullName() + " " + employee.getSalary());
         }
         System.out.print("Введите айди: ");
-        // поиск по айди
+        // id search
         Employee employee = employeeRep.getById(scanner.nextInt());
 
         while (true){
 
-            // ввод сумм и подсчет новой заработной платы;
+            // entering amounts and calculating new wages;
             System.out.print("Сумму на которуй вы хотите понизить: ");
             double upSalary = scanner.nextDouble();
             double refreshSalary = employee.getSalary() - upSalary;
 
             if(refreshSalary > 0){
-                // запись в бд
+                // database entry
                 employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
                 break;
             } else {
@@ -223,7 +223,7 @@ public class DirektorService {
         String n = scanner.nextLine();
 
         System.out.println("Введите данные работника" );
-        // регистрация сотриднука
+        // employee registration
         System.out.println("Имя");
         String fullName = scanner.nextLine();
         System.out.println("Логин");
@@ -236,7 +236,7 @@ public class DirektorService {
         double salary = scanner.nextDouble();
         Employee employeeAdd = new Employee(fullName, login, password, typeOfAccount, salary);
 
-        // записываются все данные в бд
+        // all data is written to the database
         employeeRep.createEmployee(employeeAdd);
     }
 
@@ -246,17 +246,17 @@ public class DirektorService {
                 "1 - Работник " +
                 "2 - Клиент: ");
         switch (scanner.nextInt()){
-            // удалить сотрудника
+            // delete an employee
             case 1 -> {
                 long deleteEmployee = scanner.nextLong();
                 employeeRep.deleteEmployee(deleteEmployee);
             }
-            // удалить клиента
+            // delete a client
             case 2 -> {
                 long deleteClinet = scanner.nextLong();
                 clientRep.deleteClient(deleteClinet);
             }
-            // если введены не коректные данные
+            // if incorrect data is entered
             default -> {
                 System.out.println("Вы ввели не правильные данные, введите ещё раз");
                 delete();

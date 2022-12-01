@@ -12,6 +12,9 @@ public class Basket {
     private double totalCost;
     private BdProcess bdProcess;
 
+    public Basket() {
+    }
+
     public Basket(int idClient, String order, int amount, double cost, double totalCost, BdProcess bdProcess) {
         this.idClient = idClient;
         this.order = order;

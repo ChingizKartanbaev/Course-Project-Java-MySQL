@@ -8,4 +8,8 @@ import java.util.ArrayList;
 public interface OrderRep {
 
     void createOrder(ArrayList<Basket>basket);
+
+    ArrayList<Basket> getAllOrders();
+
+    void updateOrder (int id, String process);
 }

@@ -105,7 +105,7 @@ public class TasksRepImpl implements TasksRep {
     }
 
     @Override
-    public void updateTask (int id, String process) {
+    public void updateTask(int id, String process) {
 
         String update = "UPDATE " + Const.TASKS_TABLE + " set " + Const.TASKS_PROCESS + "=?" + " WHERE "
                 + Const.TASKS_ID + "=?";
