@@ -10,17 +10,19 @@ public class Basket {
     private int amount;
     private double cost;
     private double totalCost;
+    private int orderNumber;
     private BdProcess bdProcess;
 
     public Basket() {
     }
 
-    public Basket(int idClient, String order, int amount, double cost, double totalCost, BdProcess bdProcess) {
+    public Basket(int idClient, String order, int amount, double cost, double totalCost, int orderNumber, BdProcess bdProcess) {
         this.idClient = idClient;
         this.order = order;
         this.amount = amount;
         this.cost = cost;
         this.totalCost = totalCost;
+        this.orderNumber = orderNumber;
         this.bdProcess = bdProcess;
     }
 
@@ -76,6 +78,14 @@ public class Basket {
 
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     @Override

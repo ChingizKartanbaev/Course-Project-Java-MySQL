@@ -23,7 +23,6 @@ public class ClientService {
 
     public static void clientMenu(long idClient) {
 
-        //TODO меню проверить заказ
         loop:
         while (true) {
 
@@ -54,6 +53,7 @@ public class ClientService {
     public static void makeOrder(long idClient) {
         PrettyTable tableOfBasket = new PrettyTable("Наименование продукта", "Количество", "Стоимость");
         ArrayList<Basket> baskets = new ArrayList<>();
+        int numberOfOrder = 1 + (int) (Math.random() * 100);
 
         loop:
         while (true) {
@@ -64,14 +64,15 @@ public class ClientService {
                     4 - Завершить""");
 
             switch (scanner.nextInt()) {
+
                 case 1 -> {
                     PrettyTable prettyTable = new PrettyTable("Айди", "Название пробукта", "Стоимость");
                     productRep.getAllProduct().forEach(x -> prettyTable.addRow(String.valueOf(x.getIdProduct()),
                             x.getName(), String.valueOf(x.getCost())));
                     System.out.println(prettyTable);
                 }
-                case 2 -> {
 
+                case 2 -> {
                     System.out.println("""
                             Выберите категорию
                             1 - Напитки
@@ -99,8 +100,9 @@ public class ClientService {
 
                     double totalCost = amountOfProduct * productRep.getProductById(idProduct).getCost();
 
+
                     Basket basket = new Basket((int) idClient, productRep.getProductById(idProduct).getName(), amountOfProduct,
-                            totalCost, totalCost, BdProcess.RUNNING);
+                            totalCost, totalCost, numberOfOrder, BdProcess.RUNNING);
 
                     baskets.add(basket);
 
@@ -109,18 +111,17 @@ public class ClientService {
 
                     System.out.println(tableOfBasket);
                 }
+
                 case 4 -> {
                     break loop;
                 }
-
-                default -> {
-                    System.out.println("Ошибка");
-                    continue;
-                }
+                default -> System.out.println("Ошибка");
             }
-
-            orderRep.createOrder(baskets);
         }
+        orderRep.createOrder(baskets);
+        System.out.println("---------");
+        System.out.println("Ваш номер заказа: " + numberOfOrder);
+        System.out.println("---------" + "\n");
     }
 
     public static PrettyTable choseByCategory(Categories categories) {
@@ -145,14 +146,18 @@ public class ClientService {
     public static void checkOrder(){
         boolean flag = false;
 
-        System.out.print("Введите свой id: ");
+        System.out.print("Введите номер заказа: ");
         int num = scanner.nextInt();
 
         for (int i = 0; i < orderRep.getAllOrders().size(); i++) {
-            if(orderRep.getAllOrders().get(i).getIdClient() == num
-                    && String.valueOf(orderRep.getAllOrders().get(i).getBdProcess()).equals("FINISHED")){
-                flag = true;
+            if(orderRep.getAllOrders().get(i).getOrderNumber() == num){
+                flag = orderRep.getAllOrders().get(i).getOrderNumber() == num &&
+                        String.valueOf(orderRep.getAllOrders().get(i).getBdProcess()).equals("FINISHED");
             }
+            else {
+                System.out.println("Данного заказа нету");
+            }
+
         }
 
         if(flag){

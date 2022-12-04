@@ -121,12 +121,12 @@ public class CashierService {
 
 
     public static void completeOrder() {
-        System.out.print("Введите id: ");
-        int id = scanner.nextInt();
-        System.out.print("Выполнили задание? (1 - да,2 - нет) ");
+        System.out.print("Введите номер заказа: ");
+        int orderNumber = scanner.nextInt();
+        System.out.print("Заказ готов? (1 - да,2 - нет) ");
 
         switch (scanner.nextInt()){
-            case 1 -> orderRep.updateOrder(id, String.valueOf(BdProcess.FINISHED));
+            case 1 -> orderRep.updateOrder(orderNumber, String.valueOf(BdProcess.FINISHED));
             case 2 -> System.out.println("Выполните задание");
             default -> System.out.println("Ошибка");
         }

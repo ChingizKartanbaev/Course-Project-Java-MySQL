@@ -19,7 +19,8 @@ public class OrderRepImpl implements OrderRep {
     public void createOrder(ArrayList<Basket> baskets) {
 
         String insert = "INSERT INTO " + Const.ORDER_TABLE + "(" + Const.ORDER_IDCLIENT + "," + Const.ORDER_ORDER + "," +
-                Const.ORDER_AMOUNT + "," + Const.ORDER_COST + "," + Const.ORDER_PROGRESS + ")" + "VALUES(?,?,?,?,?)";
+                Const.ORDER_AMOUNT + "," + Const.ORDER_COST + "," +  Const.ORDER_NUMBER + "," + Const.ORDER_PROGRESS + ")"
+                + "VALUES(?,?,?,?,?,?)";
         try {
             PreparedStatement preparedStatement = dbHelper.dbGetConnection().prepareStatement(insert);
             for (Basket basket : baskets) {
@@ -27,7 +28,8 @@ public class OrderRepImpl implements OrderRep {
                 preparedStatement.setString(2, basket.getOrder());
                 preparedStatement.setInt(3, basket.getAmount());
                 preparedStatement.setDouble(4, basket.getCost());
-                preparedStatement.setString(5, String.valueOf(basket.getBdProcess()));
+                preparedStatement.setInt(5, basket.getOrderNumber());
+                preparedStatement.setString(6, String.valueOf(basket.getBdProcess()));
                 preparedStatement.addBatch();
             }
 
@@ -54,6 +56,7 @@ public class OrderRepImpl implements OrderRep {
                 basket.setOrder(resultSet.getString("orders"));
                 basket.setAmount(resultSet.getInt("amount"));
                 basket.setCost(resultSet.getDouble("cost"));
+                basket.setOrderNumber(resultSet.getInt("orderNumber"));
                 basket.setBdProcess(BdProcess.valueOf(resultSet.getString("progress")));
                 basketList.add(basket);
             }
@@ -65,15 +68,15 @@ public class OrderRepImpl implements OrderRep {
     }
 
     @Override
-    public void updateOrder(int id, String process){
+    public void updateOrder(int orderNumber, String process){
 
         String update = "UPDATE " + Const.ORDER_TABLE + " set " + Const.ORDER_PROGRESS + "=?" + " WHERE "
-                + Const.ORDER_IDCLIENT + "=?";
+                + Const.ORDER_NUMBER + "=?";
 
         try {
             PreparedStatement preparedStatement = dbHelper.dbGetConnection().prepareStatement(update);
             preparedStatement.setString(1, process);
-            preparedStatement.setInt(2, id);
+            preparedStatement.setInt(2, orderNumber);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

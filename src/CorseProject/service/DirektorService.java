@@ -166,7 +166,6 @@ public class DirektorService {
         System.out.print("Введите айди: ");
         long idEmployee = scanner.nextLong();
 
-        salaryThatUsed -= employeeRep.getById(idEmployee).getSalary();
         // id search
         Employee employee = employeeRep.getById(idEmployee);
 
@@ -177,11 +176,10 @@ public class DirektorService {
             double refreshSalary = employee.getSalary() + upSalary;
 
             // checking for a salary increase, the po should not be more than the allocated budget
-            if(budgetRep.getByBudgetAllocation("Salary budget").getExpenses() > (refreshSalary + salaryThatUsed)){
+            if(budgetRep.getByBudgetAllocation("Salary budget").getExpenses() > refreshSalary + (salaryThatUsed - employee.getSalary())){
                 // database entry
                 employeeRep.updateEmployeeSalary((int) employee.getId(), refreshSalary);
                 System.out.println("Зарплата была повышена");
-                salaryThatUsed = 0;
                 break;
 
             }else {

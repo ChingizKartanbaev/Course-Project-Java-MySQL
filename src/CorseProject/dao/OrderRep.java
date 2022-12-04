@@ -11,5 +11,5 @@ public interface OrderRep {
 
     ArrayList<Basket> getAllOrders();
 
-    void updateOrder (int id, String process);
+    void updateOrder (int orderNumber, String process);
 }
