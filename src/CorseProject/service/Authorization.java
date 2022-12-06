@@ -27,9 +27,9 @@ public class Authorization {
                     // the employee's password and login are entered
                     Scanner scanner = new Scanner(System.in);
                     System.out.print("Введите логин: ");
-                    String login = scanner.nextLine();
+                    String login = scanner.nextLine().trim();
                     System.out.print("Введите пароль: ");
-                    String password = scanner.nextLine();
+                    String password = scanner.nextLine().trim();
 
                     // we get a list of all employees
                     for (int i = 0; i < employeeRep.getAllEmployee().size(); i++) {
@@ -38,19 +38,25 @@ public class Authorization {
                                 employeeRep.getAllEmployee().get(i).getPassword().equals(password)){
                             // the account type is taken and checks for matches via switch
                             switch (employeeRep.getAllEmployee().get(i).getTypeOfAccount()){
-                                case "Direktor" -> {System.out.println("\nДобро пожаловать: " +
+                                case "Direktor" -> {
+                                    DirektorService direktor = new DirektorService();
+                                    System.out.println("\nДобро пожаловать: " +
                                         employeeRep.getAllEmployee().get(i).getFullName());
-                                    DirektorService.showMenu();
+                                    direktor.showMenu();
                                     break loop;
                                 }
-                                case "Manager" -> {System.out.println("\nДобро пожаловать: " +
+                                case "Manager" -> {
+                                    ManagerService manager = new ManagerService();
+                                    System.out.println("\nДобро пожаловать: " +
                                         employeeRep.getAllEmployee().get(i).getFullName());
-                                    ManagerService.managerMenu();
+                                    manager.managerMenu();
                                     break loop;
                                 }
-                                case "Cashier" -> {System.out.println("\nДобро пожаловать: " +
+                                case "Cashier" -> {
+                                    CashierService cashier = new CashierService();
+                                    System.out.println("\nДобро пожаловать: " +
                                         employeeRep.getAllEmployee().get(i).getFullName());
-                                    CashierService.cashierMenu(employeeRep.getAllEmployee().get(i).getId());
+                                    cashier.cashierMenu(employeeRep.getAllEmployee().get(i).getId());
                                     break loop;
                                 }
                             }
@@ -64,12 +70,13 @@ public class Authorization {
 
                     switch (scanner.nextInt()){
                         case 1 -> {
+                            ClientService client = new ClientService();
                             // authorization for the client
                             // data entry
                             System.out.print("Введите логин: ");
-                            String login = scanner.next();
+                            String login = scanner.next().trim();
                             System.out.print("Введите пароль: ");
-                            String password = scanner.next();
+                            String password = scanner.next().trim();
 
                             // we get a list of all employees
                             for (int i = 0; i < clientRep.getAllClient().size(); i++) {
@@ -77,7 +84,7 @@ public class Authorization {
                                 if(clientRep.getAllClient().get(i).getLogin().equals(login) &&
                                         clientRep.getAllClient().get(i).getPassword().equals(password)){
                                     System.out.println("Добро пожаловать " + clientRep.getAllClient().get(i).getFullName());
-                                    ClientService.clientMenu(clientRep.getAllClient().get(i).getId());
+                                    client.clientMenu(clientRep.getAllClient().get(i).getId());
                                     break loop;
                                 }
                             }

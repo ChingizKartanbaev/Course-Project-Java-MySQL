@@ -12,15 +12,14 @@ import CorseProject.utils.PrettyTable;
 
 import java.util.Scanner;
 
-public class CashierService {
+public class CashierService extends Accounts {
 
     private static final OrderRep orderRep = new OrderRepImpl();
     private static final TasksRep tasksRep = new TasksRepImpl();
     private static final EmployeeRep employeeRep = new EmployeeRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
-    public static void cashierMenu(long idEmployee) {
 
-        //TODO меню 4, 5
+    public void cashierMenu(long idEmployee) {
         loop:
         while (true){
 
@@ -37,14 +36,14 @@ public class CashierService {
                     """);
 
             switch (scanner.nextInt()){
-                case 1 -> System.out.println(showTaskForEmployee());
-                case 2 -> showFinishedTask();
+                case 1 -> System.out.println(super.showTaskForEmployee());
+                case 2 -> super.showFinishedTask();
                 case 3 -> completeTask();
-                case 4 -> showUnprocessedOrders();
+                case 4 -> super.showUnprocessedOrders();
                 case 5 -> completeOrder();
                 case 6 -> System.out.println(showSalary(idEmployee));
                 case 7 -> {
-                    System.out.println("Программа завершена, мы будем рады вашему возвращению!");
+                    end();
                     break loop;
                 }
                 default -> System.out.println("Данные введены не котректно");
@@ -54,44 +53,10 @@ public class CashierService {
 
 
 
-    public static PrettyTable showTaskForEmployee() {
 
-        PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
-
-        for (int i = 0; i < tasksRep.getAllTasks().size(); i++) {
-
-            if(tasksRep.getAllTasks().get(i).getProcess().equals("RUNNING")){
-                prettyTable.addRow(tasksRep.getAllTasks().get(i).getTask(),
-                        String.valueOf(tasksRep.getAllTasks().get(i).getIdEmployee()),
-                        employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
-            }
-        }
-
-        return prettyTable;
-    }
-
-
-
-    public static void showFinishedTask() {
-
-        PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
-
-        for (int i = 0; i < tasksRep.getAllTasks().size(); i++) {
-            if(tasksRep.getAllTasks().get(i).getProcess().equals("FINISHED")){
-                prettyTable.addRow(tasksRep.getAllTasks().get(i).getTask(),
-                        String.valueOf(tasksRep.getAllTasks().get(i).getIdEmployee()),
-                        employeeRep.getById(tasksRep.getAllTasks().get(i).getIdEmployee()).getFullName());
-                System.out.println(prettyTable);
-            }else {
-                System.out.println("Задания ещё не выполнены");
-            }
-        }
-    }
-
-
-
-    public static void completeTask() {
-
+    // 3 Меню
+    //TODO сделать проверку есть ли номер данного задания
+    private void completeTask() {
         System.out.print("Введите номер задания: ");
         int id = scanner.nextInt();
         System.out.print("Выполнили задание? (1 - да,2 - нет) ");
@@ -105,22 +70,10 @@ public class CashierService {
 
 
 
-    public static void showUnprocessedOrders() {
-        PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость");
 
-        for (Basket basket : orderRep.getAllOrders()) {
-            if(String.valueOf(basket.getBdProcess()).equals("RUNNING")){
-                prettyTable.addRow(String.valueOf(basket.getIdClient()), basket.getOrder(), String.valueOf(basket.getAmount()),
-                        String.valueOf(basket.getCost()));
-            }
-        }
-
-        System.out.println(prettyTable);
-    }
-
-
-
-    public static void completeOrder() {
+    // 5 Меню
+    //TODO сделать проверку есть ли номер данного заказа
+    private void completeOrder() {
         System.out.print("Введите номер заказа: ");
         int orderNumber = scanner.nextInt();
         System.out.print("Заказ готов? (1 - да,2 - нет) ");
@@ -133,7 +86,10 @@ public class CashierService {
     }
 
 
-    public static PrettyTable showSalary(long idEmployee) {
+
+
+    // 6 Меню
+    private PrettyTable showSalary(long idEmployee) {
         PrettyTable prettyTable = new PrettyTable("ФИО","Зарплата");
 
         prettyTable.addRow(employeeRep.getById(idEmployee).getFullName(),

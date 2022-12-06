@@ -14,15 +14,14 @@ import CorseProject.utils.*;
 
 import java.util.*;
 
-public class ClientService {
+public class ClientService extends Accounts {
 
     private static final ProductRepImp productRep = new ProductRepImp();
     private static final OrderRep orderRep = new OrderRepImpl();
     private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void clientMenu(long idClient) {
-
+    public void clientMenu(long idClient) {
         loop:
         while (true) {
 
@@ -40,17 +39,18 @@ public class ClientService {
                 case 2 -> checkOrder();
                 case 3 -> writeReview();
                 case 4 -> {
-                    System.out.println("Программа завершена, мы будем рады вашему возвращению!");
+                    end();
                     break loop;
                 }
                 default -> System.out.println("Данные введены не котректно");
             }
-
         }
     }
 
 
-    public static void makeOrder(long idClient) {
+    // 1 Меню
+    //TODO не трогать пусть так будет!
+    private void makeOrder(long idClient) {
         PrettyTable tableOfBasket = new PrettyTable("Наименование продукта", "Количество", "Стоимость");
         ArrayList<Basket> baskets = new ArrayList<>();
         int numberOfOrder = 1 + (int) (Math.random() * 100);
@@ -124,7 +124,7 @@ public class ClientService {
         System.out.println("---------" + "\n");
     }
 
-    public static PrettyTable choseByCategory(Categories categories) {
+    private PrettyTable choseByCategory(Categories categories) {
         // Create a pretty table and add a header
         PrettyTable prettyTable = new PrettyTable( "Айди", "Название пробукта", "Стоимость");
         ProductRep productRep = new ProductRepImp();
@@ -143,7 +143,9 @@ public class ClientService {
 
 
 
-    public static void checkOrder(){
+    // 2 Меню
+    //TODO может быть сделать короче
+    private void checkOrder(){
         boolean flag = false;
 
         System.out.print("Введите номер заказа: ");
@@ -157,7 +159,6 @@ public class ClientService {
             else {
                 System.out.println("Данного заказа нету");
             }
-
         }
 
         if(flag){
@@ -169,8 +170,9 @@ public class ClientService {
 
 
 
-    public static void writeReview() {
-
+    // 3 Меню
+    //TODO сделать проверки
+    private void writeReview() {
         System.out.println("Напишите отзыв: ");
         String reviewThatWriteClient = scanner.nextLine();
 

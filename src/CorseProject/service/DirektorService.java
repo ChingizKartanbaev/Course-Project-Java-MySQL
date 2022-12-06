@@ -7,17 +7,15 @@ import CorseProject.models.Employee;
 
 import java.util.Scanner;
 
-public class DirektorService {
+public class DirektorService extends Accounts {
 
     private static final EmployeeRep employeeRep = new EmployeeRepImpl();
     private static final ClientRep clientRep = new ClientRepImpl();
-    private static final ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
-    private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
     private static final BudgetRep budgetRep = new BudgetRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void showMenu (){
 
+    public void showMenu (){
         loop:
         while (true){
 
@@ -37,13 +35,13 @@ public class DirektorService {
 
             switch (scanner.nextInt()){
 
-                case 1 -> showAListOfAllCoverageAreas();
+                case 1 -> System.out.println(super.showAListOfAllCoverageAreas());
 
                 case 2 -> budget();
 
                 case 3 -> redactBudget();
 
-                case 4 -> showReview();
+                case 4 -> System.out.println(super.showReview());
 
                 case 5 -> raiseSalary();
 
@@ -54,26 +52,19 @@ public class DirektorService {
                 case 8 -> delete();
 
                 case 9 -> {
-                    System.out.println("Программа завершена, мы будем рады вашему возвращению!");
+                    end();
                     break loop;
                 }
-
+                default -> System.out.println("Данные введены не котректно");
             }
         }
     }
 
-    public static void showAListOfAllCoverageAreas (){
 
-        // displays a list of coverage areas
-        PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
 
-        // through forEach, the name of the city and the profit from the city are added to the pretty table
-        reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),x.getCustomerCoverageArea()));
-        System.out.println(prettyTable);
-    }
-
-    private static void budget() {
-
+    // 2 Меню
+    //ToDo сумма всех регионов - это и будет общий бюджет
+    private void budget() {
         // variable for storing the total budget
         double budgetThatUsed = 0;
         double budgetThatIsNotUsed = 0;
@@ -101,8 +92,12 @@ public class DirektorService {
         System.out.println(prettyTable);
     }
 
-    private static void redactBudget (){
 
+
+
+    // 3 Меню
+    //TODO
+    private void redactBudget() {
         while (true){
 
             double budgetThatUsed = 0;
@@ -139,19 +134,12 @@ public class DirektorService {
         }
     }
 
-    public static void showReview (){
 
-        // adds a header to the table
-        PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
 
-        // adds a review and the client's name to the table
-        reviewsRep.getAllReviews().forEach(x -> prettyTable.addRow(x.getReview(),
-                clientRep.getClientById(x.getIdClient()).getFullName()));
-        System.out.println(prettyTable);
-    }
 
-    private static void raiseSalary (){
-
+    // 5 Меню
+    //TODO не трогать!
+    private void raiseSalary() {
         double salaryThatUsed = 0;
 
         // the sum of all salaries
@@ -189,7 +177,12 @@ public class DirektorService {
         }
     }
 
-    private static void lowerSalary (){
+
+
+
+    // 6 Меню
+    //TODO не трогать!
+    private void lowerSalary() {
 
         // output a list of all employees
         for (Employee employee : employeeRep.getAllEmployee()) {
@@ -216,7 +209,12 @@ public class DirektorService {
         }
     }
 
-    private static void register (){
+
+
+
+    // 7 Меню
+    //TODO добавить проверки
+    private void register() {
         // Заглушка
         String n = scanner.nextLine();
 
@@ -238,7 +236,12 @@ public class DirektorService {
         employeeRep.createEmployee(employeeAdd);
     }
 
-    private static void delete () {
+
+
+
+    // 8 Меню
+    //TODO не трогать!
+    private void delete() {
 
         System.out.println("Введите кого вы хотие удалить" +
                 "1 - Работник " +
