@@ -51,7 +51,6 @@ public class ClientService extends Accounts {
     // 1 Меню
     //TODO не трогать пусть так будет!
     private void makeOrder(long idClient) {
-        PrettyTable tableOfBasket = new PrettyTable("Наименование продукта", "Количество", "Стоимость");
         ArrayList<Basket> baskets = new ArrayList<>();
         int numberOfOrder = 1 + (int) (Math.random() * 100);
 
@@ -61,7 +60,8 @@ public class ClientService extends Accounts {
                     1 - посмотреть все меню
                     2 - посмотреть по категории
                     3 - Добавить в карзину
-                    4 - Завершить""");
+                    4 - Удалить из казрины
+                    5 - Завершить""");
 
             switch (scanner.nextInt()) {
 
@@ -100,19 +100,27 @@ public class ClientService extends Accounts {
 
                     double totalCost = amountOfProduct * productRep.getProductById(idProduct).getCost();
 
-
                     Basket basket = new Basket((int) idClient, productRep.getProductById(idProduct).getName(), amountOfProduct,
                             totalCost, totalCost, numberOfOrder, BdProcess.RUNNING);
+                    basket.setIdOrders(idProduct);
 
                     baskets.add(basket);
 
-                    tableOfBasket.addRow(basket.getOrder(), String.valueOf(basket.getAmount()),
-                            String.valueOf(basket.getTotalCost()));
-
-                    System.out.println(tableOfBasket);
+                    System.out.println(printTable(baskets));
                 }
 
                 case 4 -> {
+                    int idProduct = scanner.nextInt();
+                    for (Basket b : baskets) {
+                        if(b.getIdOrders() == idProduct){
+                            baskets.remove(b);
+                            System.out.println(printTable(baskets));
+                            break;
+                        }
+                    }
+                }
+
+                case 5 -> {
                     break loop;
                 }
                 default -> System.out.println("Ошибка");
@@ -123,6 +131,20 @@ public class ClientService extends Accounts {
         System.out.println("Ваш номер заказа: " + numberOfOrder);
         System.out.println("---------" + "\n");
     }
+
+    private PrettyTable printTable(ArrayList<Basket> baskets){
+        PrettyTable tableOfBasket = new PrettyTable("Id", "Наименование продукта", "Количество", "Стоимость");
+
+        for (Basket basket : baskets) {
+            tableOfBasket.addRow(String.valueOf(basket.getIdOrders()), basket.getOrder(), String.valueOf(basket.getAmount()),
+                    String.valueOf(basket.getTotalCost()));
+        }
+
+        return tableOfBasket;
+    }
+
+
+
 
     private PrettyTable choseByCategory(Categories categories) {
         // Create a pretty table and add a header
