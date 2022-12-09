@@ -28,7 +28,7 @@ public class DirektorService extends Accounts {
                 4 - Посмотреть отзывы
                 5 - Повысить зарплату сотруднику
                 6 - Понизить зарплату сотруднику
-                7 - Добавить
+                7 - Добавить сотрудника
                 8 - Удалить
                 9 - Выход
                 """);
@@ -63,7 +63,7 @@ public class DirektorService extends Accounts {
 
 
     // 2 Меню
-    //ToDo сумма всех регионов - это и будет общий бюджет
+    //ToDo
     private void budget() {
         // variable for storing the total budget
         double budgetThatUsed = 0;
@@ -96,7 +96,7 @@ public class DirektorService extends Accounts {
 
 
     // 3 Меню
-    //TODO
+    //ToDo не трогать! может быть сделать короче
     private void redactBudget() {
         while (true){
 
@@ -213,27 +213,53 @@ public class DirektorService extends Accounts {
 
 
     // 7 Меню
-    //TODO добавить проверки
+    //TODO не трогать!
     private void register() {
-        // Заглушка
-        String n = scanner.nextLine();
 
-        System.out.println("Введите данные работника" );
-        // employee registration
-        System.out.println("Имя");
-        String fullName = scanner.nextLine();
-        System.out.println("Логин");
-        String login = scanner.nextLine();
-        System.out.println("Пароль");
-        String password = scanner.nextLine();
-        System.out.println("Тип аккаунта");
-        String typeOfAccount = scanner.next();
-        System.out.println("Зарабатную плату");
-        double salary = scanner.nextDouble();
-        Employee employeeAdd = new Employee(fullName, login, password, typeOfAccount, salary);
+        Scanner reg = new Scanner(System.in);
 
-        // all data is written to the database
-        employeeRep.createEmployee(employeeAdd);
+        System.out.println("Введите имя и фамилию сотрудника");
+        String fullName = reg.nextLine();
+        System.out.println("Введите логин");
+        String login = reg.nextLine();
+        System.out.println("Введите пароль");
+        String password = reg.nextLine();
+        System.out.println("Ветите тип аккаунта (Manager/Cashier)");
+        String typeOfAccount = reg.next();
+        System.out.println("Введите зарабатную плату");
+        double salary = reg.nextDouble();
+
+        if(checkFullName(fullName) && checkLogin(login) && checkTypeOfAccount(typeOfAccount) && checkSalary(salary)){
+            Employee employeeAdd = new Employee(fullName, login, password, typeOfAccount, salary);
+
+            // all data is written to the database
+            employeeRep.createEmployee(employeeAdd);
+        } else {
+            System.out.println("Данные были введены некорректно");
+            register();
+        }
+    }
+
+    private boolean checkFullName(String fullName){
+        return !fullName.isEmpty();
+    }
+
+    private boolean checkLogin(String login) {
+        boolean flag = false;
+
+        for (Employee employee : employeeRep.getAllEmployee()) {
+            flag = !login.equals(employee.getLogin());
+        }
+
+        return flag;
+    }
+
+    private boolean checkTypeOfAccount(String typeOfAccount){
+        return !typeOfAccount.equals("Direktor");
+    }
+
+    private boolean checkSalary(double salary){
+        return salary > 0;
     }
 
 

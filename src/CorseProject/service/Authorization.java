@@ -13,14 +13,15 @@ public class Authorization {
     private static final ClientRep clientRep = new ClientRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
-    public void authotization (){
+    //ToDo не трогать!
+    public void authotization () {
 
         loop:
-        while (true){
+        while (true) {
 
             System.out.print("Введити тип аккаунта\n 1 - Работник ресторана \n 2 - Клиент: ");
 
-            switch (scanner.nextInt()){
+            switch (scanner.nextInt()) {
 
                 case 1 -> {
                     // authorization for an employee
@@ -34,28 +35,28 @@ public class Authorization {
                     // we get a list of all employees
                     for (int i = 0; i < employeeRep.getAllEmployee().size(); i++) {
                         // we check the entered data with the data stored in the database
-                        if(employeeRep.getAllEmployee().get(i).getLogin().equals(login) &&
-                                employeeRep.getAllEmployee().get(i).getPassword().equals(password)){
+                        if (employeeRep.getAllEmployee().get(i).getLogin().equals(login) &&
+                                employeeRep.getAllEmployee().get(i).getPassword().equals(password)) {
                             // the account type is taken and checks for matches via switch
-                            switch (employeeRep.getAllEmployee().get(i).getTypeOfAccount()){
+                            switch (employeeRep.getAllEmployee().get(i).getTypeOfAccount()) {
                                 case "Direktor" -> {
                                     DirektorService direktor = new DirektorService();
                                     System.out.println("\nДобро пожаловать: " +
-                                        employeeRep.getAllEmployee().get(i).getFullName());
+                                            employeeRep.getAllEmployee().get(i).getFullName());
                                     direktor.showMenu();
                                     break loop;
                                 }
                                 case "Manager" -> {
                                     ManagerService manager = new ManagerService();
                                     System.out.println("\nДобро пожаловать: " +
-                                        employeeRep.getAllEmployee().get(i).getFullName());
+                                            employeeRep.getAllEmployee().get(i).getFullName());
                                     manager.managerMenu();
                                     break loop;
                                 }
                                 case "Cashier" -> {
                                     CashierService cashier = new CashierService();
                                     System.out.println("\nДобро пожаловать: " +
-                                        employeeRep.getAllEmployee().get(i).getFullName());
+                                            employeeRep.getAllEmployee().get(i).getFullName());
                                     cashier.cashierMenu(employeeRep.getAllEmployee().get(i).getId());
                                     break loop;
                                 }
@@ -68,7 +69,7 @@ public class Authorization {
                 case 2 -> {
                     System.out.println("1 - Войти \n2 - Регистрация");
 
-                    switch (scanner.nextInt()){
+                    switch (scanner.nextInt()) {
                         case 1 -> {
                             ClientService client = new ClientService();
                             // authorization for the client
@@ -81,8 +82,8 @@ public class Authorization {
                             // we get a list of all employees
                             for (int i = 0; i < clientRep.getAllClient().size(); i++) {
                                 // we check the entered data with the data stored in the database
-                                if(clientRep.getAllClient().get(i).getLogin().equals(login) &&
-                                        clientRep.getAllClient().get(i).getPassword().equals(password)){
+                                if (clientRep.getAllClient().get(i).getLogin().equals(login) &&
+                                        clientRep.getAllClient().get(i).getPassword().equals(password)) {
                                     System.out.println("Добро пожаловать " + clientRep.getAllClient().get(i).getFullName());
                                     client.clientMenu(clientRep.getAllClient().get(i).getId());
                                     break loop;
@@ -92,20 +93,40 @@ public class Authorization {
                         case 2 -> {
                             // client registration
                             Scanner scanner = new Scanner(System.in);
-                            System.out.println("ФИО");
+                            System.out.println("Введите свое имя и фаилию");
                             String fullName = scanner.nextLine();
                             System.out.println("Логин");
                             String login = scanner.nextLine();
                             System.out.println("Пароль");
                             String password = scanner.nextLine();
-                            CorseProject.models.Client clientAdd = new Client(fullName, login, password);
-                            // writing data to the database
-                            clientRep.createClient(clientAdd);
-                            authotization();
+
+                            if (fullNameCheck(fullName) && loginCheck(login)) {
+                                Client clientAdd = new Client(fullName, login, password);
+                                // writing data to the database
+                                clientRep.createClient(clientAdd);
+                                authotization();
+                            }
+                            else {
+                                System.out.println("Вы не введи имя или данный логин уже занят. Повторите попытку");
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean fullNameCheck(String fullName) {
+        return !fullName.isEmpty();
+    }
+
+    private boolean loginCheck(String login) {
+        boolean flag = false;
+
+        for (Client client : clientRep.getAllClient()) {
+            flag = !login.equals(client.getLogin());
+        }
+
+        return flag;
     }
 }

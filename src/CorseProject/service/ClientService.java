@@ -37,7 +37,7 @@ public class ClientService extends Accounts {
             switch (scanner.nextInt()){
                 case 1 -> makeOrder(idClient);
                 case 2 -> checkOrder();
-                case 3 -> writeReview();
+                case 3 -> writeReview(idClient);
                 case 4 -> {
                     end();
                     break loop;
@@ -49,7 +49,7 @@ public class ClientService extends Accounts {
 
 
     // 1 Меню
-    //TODO не трогать пусть так будет!
+    //TODO не трогать!
     private void makeOrder(long idClient) {
         ArrayList<Basket> baskets = new ArrayList<>();
         int numberOfOrder = 1 + (int) (Math.random() * 100);
@@ -126,10 +126,16 @@ public class ClientService extends Accounts {
                 default -> System.out.println("Ошибка");
             }
         }
-        orderRep.createOrder(baskets);
-        System.out.println("---------");
-        System.out.println("Ваш номер заказа: " + numberOfOrder);
-        System.out.println("---------" + "\n");
+
+        if(!baskets.isEmpty()){
+            orderRep.createOrder(baskets);
+            System.out.println("---------");
+            System.out.println("Ваш номер заказа: " + numberOfOrder);
+            System.out.println("---------" + "\n");
+        }else {
+            System.out.println("Корзина пуста");
+        }
+
     }
 
     private PrettyTable printTable(ArrayList<Basket> baskets){
@@ -142,9 +148,6 @@ public class ClientService extends Accounts {
 
         return tableOfBasket;
     }
-
-
-
 
     private PrettyTable choseByCategory(Categories categories) {
         // Create a pretty table and add a header
@@ -165,8 +168,9 @@ public class ClientService extends Accounts {
 
 
 
+
     // 2 Меню
-    //TODO может быть сделать короче
+    //TODO не трогать!
     private void checkOrder(){
         boolean flag = false;
 
@@ -178,31 +182,35 @@ public class ClientService extends Accounts {
                 flag = orderRep.getAllOrders().get(i).getOrderNumber() == num &&
                         String.valueOf(orderRep.getAllOrders().get(i).getBdProcess()).equals("FINISHED");
             }
-            else {
-                System.out.println("Данного заказа нету");
-            }
+
         }
 
-        if(flag){
+        if(flag) {
             System.out.println("Ваш заказ готов");
-        }else {
-            System.out.println("Ваш заказ еще не готов");
+        } else {
+            System.out.println("Ваш заказ не готов или данного заказа нету");
         }
     }
 
 
 
     // 3 Меню
-    //TODO сделать проверки
-    private void writeReview() {
-        System.out.println("Напишите отзыв: ");
-        String reviewThatWriteClient = scanner.nextLine();
+    //TODO не трогать!
+    private void writeReview(long idClient) {
+        Scanner write = new Scanner(System.in);
 
-        System.out.println("Введите свой айди");
-        int clientId = scanner.nextInt();
+        while (true){
+            System.out.println("Напишите отзыв: ");
+            String reviewThatWriteClient = write.nextLine();
 
-        Reviews reviews = new Reviews(reviewThatWriteClient, clientId);
+            if(!reviewThatWriteClient.isEmpty()){
+                Reviews reviews = new Reviews(reviewThatWriteClient, (int) idClient);
+                reviewsRep.createReview(reviews);
+                break;
 
-        reviewsRep.createReview(reviews);
+            } else {
+                System.out.println("Нужно ввести отзыв");
+            }
+        }
     }
 }

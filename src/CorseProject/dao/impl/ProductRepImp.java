@@ -16,13 +16,11 @@ public class ProductRepImp implements ProductRep {
 
     DbHelper dbHelper = DbHelper.INSTANCE;
 
-
-    //TODO поменять select
     @Override
     public List<Product> getAllProduct() {
 
         List<Product> productList = new ArrayList<>();
-        String select = "SELECT * FROM products";
+        String select = "SELECT * FROM " + Const.PRODUCTS_TABLE;
 
         try (PreparedStatement preparedStatement = dbHelper.dbGetConnection().prepareStatement(select)){
             ResultSet resultSet = preparedStatement.executeQuery();

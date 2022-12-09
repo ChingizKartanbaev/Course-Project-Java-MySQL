@@ -18,6 +18,7 @@ public class ManagerService extends Accounts {
 
 
     public void managerMenu() {
+
         loop:
         while (true){
             System.out.println("""
@@ -54,6 +55,7 @@ public class ManagerService extends Accounts {
     }
 
 
+
     // 4 Меню
     //TODO не трогать!
     private void showFinishedOrders() {
@@ -72,7 +74,7 @@ public class ManagerService extends Accounts {
 
 
     // 5 Меню
-    //TODO сделать проверки
+    //TODO не трогать!
     private void writeTaskForEmployee() {
         // plug
         String s = scanner.nextLine();
@@ -85,24 +87,21 @@ public class ManagerService extends Accounts {
         System.out.println("Введите айди работника: ");
         long idEmployee = scanner.nextLong();
 
-        // checking for emptiness
-        if(task.isEmpty()){
-
-            System.out.println("Нужно ввести данные");
-
+        if(checkTask(task) && checkEmployee(idEmployee)) {
+            Tasks tasks = new Tasks(task, idEmployee, BdProcess.RUNNING);
+            // database entry
+            tasksRep.createTasks(tasks);
         } else {
-
-            // checking for the type of account, since we cannot give a task to the director or manager
-            if(employeeRep.getByTypeOfAccount("Direktor").getId() != idEmployee &&
-                    employeeRep.getByTypeOfAccount("Manager").getId() != idEmployee){
-
-                Tasks tasks = new Tasks(task, idEmployee, BdProcess.RUNNING);
-                // database entry
-                tasksRep.createTasks(tasks);
-
-            }else {
-                System.out.println("Извините но вы не можете назначить задание данному сотруднику");
-            }
+            System.out.println("Вы не ввели задание или вы не можете назачить задание данному сотруднику");
+            writeTaskForEmployee();
         }
+    }
+
+    private boolean checkTask(String task) {
+        return !task.isEmpty();
+    }
+
+    private boolean checkEmployee(long idEmployee){
+        return employeeRep.getByTypeOfAccount("Direktor").getId() != idEmployee;
     }
 }

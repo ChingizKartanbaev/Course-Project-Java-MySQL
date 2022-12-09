@@ -5,7 +5,11 @@ import CorseProject.dao.impl.*;
 import CorseProject.models.Basket;
 import CorseProject.utils.PrettyTable;
 
-public abstract class Accounts {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+
+public abstract class Accounts <T> {
 
     private static final ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
     private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
@@ -38,11 +42,11 @@ public abstract class Accounts {
 
     //TODO не трогать!
     protected PrettyTable showTaskForEmployee() {
-        PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
+        PrettyTable prettyTable = new PrettyTable( "Id", "Заднание", "Айди сотрудника", "Имя сотрудника");
 
         // through the streams, we filter by "RUNNING" if the received data meets the condition, they are added to the pretty table
         tasksRep.getAllTasks().stream().filter(x -> x.getProcess().equals("RUNNING")).forEach(x ->
-                prettyTable.addRow(x.getTask(), String.valueOf(x.getIdEmployee()),
+                prettyTable.addRow(String.valueOf(x.getId()), x.getTask(), String.valueOf(x.getIdEmployee()),
                         employeeRep.getById(x.getIdEmployee()).getFullName()));
 
         return prettyTable;
@@ -64,12 +68,12 @@ public abstract class Accounts {
 
     //TODO не трогать!
     protected void showUnprocessedOrders() {
-        PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость");
+        PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость", "Номер заказа");
 
         for (Basket basket : orderRep.getAllOrders()) {
             if(String.valueOf(basket.getBdProcess()).equals("RUNNING")){
                 prettyTable.addRow(String.valueOf(basket.getIdClient()), basket.getOrder(), String.valueOf(basket.getAmount()),
-                        String.valueOf(basket.getCost()));
+                        String.valueOf(basket.getCost()), String.valueOf(basket.getOrderNumber()));
             }
         }
 
@@ -88,7 +92,6 @@ public abstract class Accounts {
 
         return prettyTable;
     }
-
 
     //TODO не трогать!
     protected void end() {
