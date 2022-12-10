@@ -15,7 +15,7 @@ public class DirektorService extends Accounts {
     private static final Scanner scanner = new Scanner(System.in);
 
 
-    public void showMenu (){
+    public void showDirekorMenu (){
         loop:
         while (true){
 
@@ -269,17 +269,20 @@ public class DirektorService extends Accounts {
     //TODO не трогать!
     private void delete() {
 
-        System.out.println("Введите кого вы хотие удалить" +
+        System.out.println("Введите кого вы хотие удалить " +
                 "1 - Работник " +
                 "2 - Клиент: ");
+
         switch (scanner.nextInt()){
             // delete an employee
             case 1 -> {
+                System.out.println(super.showListOfEmployee());
                 long deleteEmployee = scanner.nextLong();
                 employeeRep.deleteEmployee(deleteEmployee);
             }
             // delete a client
             case 2 -> {
+                System.out.println(super.showListOfClient());
                 long deleteClinet = scanner.nextLong();
                 clientRep.deleteClient(deleteClinet);
             }

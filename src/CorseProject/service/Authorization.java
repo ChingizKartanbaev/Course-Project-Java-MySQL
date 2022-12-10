@@ -43,7 +43,7 @@ public class Authorization {
                                     DirektorService direktor = new DirektorService();
                                     System.out.println("\nДобро пожаловать: " +
                                             employeeRep.getAllEmployee().get(i).getFullName());
-                                    direktor.showMenu();
+                                    direktor.showDirekorMenu();
                                     break loop;
                                 }
                                 case "Manager" -> {

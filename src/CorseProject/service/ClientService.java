@@ -65,12 +65,7 @@ public class ClientService extends Accounts {
 
             switch (scanner.nextInt()) {
 
-                case 1 -> {
-                    PrettyTable prettyTable = new PrettyTable("Айди", "Название пробукта", "Стоимость");
-                    productRep.getAllProduct().forEach(x -> prettyTable.addRow(String.valueOf(x.getIdProduct()),
-                            x.getName(), String.valueOf(x.getCost())));
-                    System.out.println(prettyTable);
-                }
+                case 1 -> super.showMenu();
 
                 case 2 -> {
                     System.out.println("""
@@ -206,6 +201,7 @@ public class ClientService extends Accounts {
             if(!reviewThatWriteClient.isEmpty()){
                 Reviews reviews = new Reviews(reviewThatWriteClient, (int) idClient);
                 reviewsRep.createReview(reviews);
+                System.out.println("Отзыв оставлен");
                 break;
 
             } else {

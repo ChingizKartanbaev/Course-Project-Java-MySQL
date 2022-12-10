@@ -3,27 +3,71 @@ package CorseProject.service;
 import CorseProject.dao.*;
 import CorseProject.dao.impl.*;
 import CorseProject.models.Basket;
+import CorseProject.models.Employee;
+import CorseProject.models.enums.BdProcess;
 import CorseProject.utils.PrettyTable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Scanner;
 
-public abstract class Accounts <T> {
+
+public abstract class Accounts {
 
     private static final ReportManagerRep reportManagerRep = new ReportManagerRepImpl();
     private static final ReviewsRep reviewsRep = new ReviewsRepImpl();
+    private static final ClientRep clientRep = new ClientRepImpl();
+    private static final ProductRep productRep = new ProductRepImp();
     private static final OrderRep orderRep = new OrderRepImpl();
     private static final TasksRep tasksRep = new TasksRepImpl();
     private static final EmployeeRep employeeRep = new EmployeeRepImpl();
 
+
     //TODO продумать!
     protected PrettyTable showAListOfAllCoverageAreas (){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("""
+                1 - Список сотрудников
+                2 - Список клиентов
+                3 - Меню
+                """);
+
+        switch (scanner.nextInt()){
+            case 1 -> System.out.println(showListOfEmployee());
+            case 2 -> System.out.println(showListOfClient());
+            case 3 -> System.out.println(showMenu());
+        }
+
         // displays a list of coverage areas
-        PrettyTable prettyTable = new PrettyTable("City Name", "Coverage area");
+        PrettyTable prettyTable = new PrettyTable("Количество сотрудников", "Количество клиентвов",
+                "Количество позиций в меню");
 
         // through forEach, the name of the city and the profit from the city are added to the pretty table
-        reportManagerRep.getAllReports().forEach(x -> prettyTable.addRow(x.getCityName(),x.getCustomerCoverageArea()));
+        prettyTable.addRow(String.valueOf(employeeRep.getAllEmployee().size()), String.valueOf(clientRep.getAllClient().size()),
+                String.valueOf(productRep.getAllProduct().size()));
+        return prettyTable;
+    }
+
+
+    //ToDo не трогать
+    protected PrettyTable showListOfEmployee() {
+        PrettyTable prettyTable = new PrettyTable("Id сотрудние", "Фамилия и Имя сотрудника", "Должность", "Зарплата");
+        employeeRep.getAllEmployee().forEach(x -> prettyTable.addRow(String.valueOf(x.getId()), x.getFullName(),
+                x.getTypeOfAccount(), String.valueOf(x.getSalary())));
+        return prettyTable;
+    }
+
+    //ToDo не трогать
+    protected PrettyTable showListOfClient() {
+        PrettyTable prettyTable = new PrettyTable("Id клиента", "Фамилия и Имя клиента");
+        clientRep.getAllClient().forEach(x -> prettyTable.addRow(String.valueOf(x.getId()), x.getFullName()));
+        return prettyTable;
+    }
+
+    //ToDo не трогать
+    protected PrettyTable showMenu() {
+        PrettyTable prettyTable = new PrettyTable("Id", "Название пробукта", "Стоимость");
+        productRep.getAllProduct().forEach(x -> prettyTable.addRow(String.valueOf(x.getIdProduct()),
+                x.getName(), String.valueOf(x.getCost())));
+
         return prettyTable;
     }
 
@@ -80,18 +124,6 @@ public abstract class Accounts <T> {
         System.out.println(prettyTable);
     }
 
-
-    //TODO не трогать!
-    protected PrettyTable showEmployee() {
-        // Creating a come table and adding a header
-        PrettyTable prettyTable = new PrettyTable("Айди","ФИО","Тип аккаунта");
-
-        // adding an employee, full name, account type to the pretty table
-        employeeRep.getAllEmployee().forEach(x -> prettyTable.addRow(String.valueOf(x.getId()),x.getFullName(),
-                x.getTypeOfAccount()));
-
-        return prettyTable;
-    }
 
     //TODO не трогать!
     protected void end() {

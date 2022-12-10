@@ -24,28 +24,26 @@ public class ManagerService extends Accounts {
             System.out.println("""
 
                 Выберете меню\s
-                1 - Показать список сотрудников
-                2 - Посмотреть отзывы
-                3 - Показать список заказов
-                4 - Показать список завершеных закаов
-                5 - Ввести задания для сотрудников
-                6 - Показать список заданий для сотрудников
-                7 - Показать список выполненых заданий для сотрудников
-                8 - Показать список всех зон покрытия
-                9 - Выход
+                1 - Посмотреть отзывы
+                2 - Показать список заказов
+                3 - Показать список завершеных закаов
+                4 - Ввести задания для сотрудников
+                5 - Показать список заданий для сотрудников
+                6 - Показать список выполненых заданий для сотрудников
+                7 - Показать список всех зон покрытия
+                8 - Выход
                 """);
 
             switch (scanner.nextInt()) {
 
-                case 1 -> System.out.println(super.showEmployee());
-                case 2 -> System.out.println(super.showReview());
-                case 3 -> super.showUnprocessedOrders();
-                case 4 -> showFinishedOrders();
-                case 5 -> writeTaskForEmployee();
-                case 6 -> System.out.println(super.showTaskForEmployee());
-                case 7 -> super.showFinishedTask();
-                case 8 -> System.out.println(super.showAListOfAllCoverageAreas());
-                case 9 -> {
+                case 1 -> System.out.println(super.showReview());
+                case 2 -> super.showUnprocessedOrders();
+                case 3 -> showFinishedOrders();
+                case 4 -> writeTaskForEmployee();
+                case 5 -> System.out.println(super.showTaskForEmployee());
+                case 6 -> super.showFinishedTask();
+                case 7 -> System.out.println(super.showAListOfAllCoverageAreas());
+                case 8 -> {
                     end();
                     break loop;
                 }
