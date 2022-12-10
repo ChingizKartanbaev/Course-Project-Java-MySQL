@@ -13,7 +13,6 @@ public class Authorization {
     private static final ClientRep clientRep = new ClientRepImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
-    //ToDo не трогать!
     public void authotization () {
 
         loop:

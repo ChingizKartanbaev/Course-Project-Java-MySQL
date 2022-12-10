@@ -12,6 +12,4 @@ public interface BudgetRep {
     Budget getByBudgetAllocation (String budgetAllocation);
 
     void updateExpenses (int id, double money);
-
-    void deleteBudget (long id);
 }

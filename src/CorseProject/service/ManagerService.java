@@ -42,7 +42,7 @@ public class ManagerService extends Accounts {
                 case 4 -> writeTaskForEmployee();
                 case 5 -> System.out.println(super.showTaskForEmployee());
                 case 6 -> super.showFinishedTask();
-                case 7 -> System.out.println(super.showAListOfAllCoverageAreas());
+                case 7 -> super.showAListOfAllCoverageAreas();
                 case 8 -> {
                     end();
                     break loop;
@@ -55,7 +55,6 @@ public class ManagerService extends Accounts {
 
 
     // 4 Меню
-    //TODO не трогать!
     private void showFinishedOrders() {
         PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость");
 
@@ -72,7 +71,6 @@ public class ManagerService extends Accounts {
 
 
     // 5 Меню
-    //TODO не трогать!
     private void writeTaskForEmployee() {
         // plug
         String s = scanner.nextLine();

@@ -96,10 +96,4 @@ public class BudgetRepImpl implements BudgetRep {
             throw new RuntimeException(e);
         }
     }
-
-    //TODO закончить
-    @Override
-    public void deleteBudget(long id) {
-
-    }
 }

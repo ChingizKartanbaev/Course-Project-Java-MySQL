@@ -21,33 +21,46 @@ public abstract class Accounts {
     private static final EmployeeRep employeeRep = new EmployeeRepImpl();
 
 
-    //TODO продумать!
-    protected PrettyTable showAListOfAllCoverageAreas (){
+    protected void showAListOfAllCoverageAreas (){
         Scanner scanner = new Scanner(System.in);
         System.out.println("""
                 1 - Список сотрудников
                 2 - Список клиентов
-                3 - Меню
+                3 - Статистика
+                4 - Меню
                 """);
 
         switch (scanner.nextInt()){
             case 1 -> System.out.println(showListOfEmployee());
             case 2 -> System.out.println(showListOfClient());
-            case 3 -> System.out.println(showMenu());
+            case 3 -> System.out.println(statistic());
+            case 4 -> System.out.println(showMenu());
+        }
+    }
+
+    protected PrettyTable statistic() {
+        int amountOfFinished = 0;
+        int amountOfUnfinished = 0;
+        int profit = 0;
+
+        for (Basket basket : orderRep.getAllOrders()) {
+            if(basket.getBdProcess() == BdProcess.FINISHED){
+                amountOfFinished++;
+                profit += basket.getCost();
+            } else if (basket.getBdProcess() == BdProcess.RUNNING){
+                amountOfUnfinished++;
+            }
         }
 
-        // displays a list of coverage areas
         PrettyTable prettyTable = new PrettyTable("Количество сотрудников", "Количество клиентвов",
-                "Количество позиций в меню");
+                "Количество завершенных заказов", "Количество активных заказов", "Общая сумма всех завершенных заказов");
 
-        // through forEach, the name of the city and the profit from the city are added to the pretty table
         prettyTable.addRow(String.valueOf(employeeRep.getAllEmployee().size()), String.valueOf(clientRep.getAllClient().size()),
-                String.valueOf(productRep.getAllProduct().size()));
+                String.valueOf(amountOfFinished), String.valueOf(amountOfUnfinished), String.valueOf(profit));
         return prettyTable;
     }
 
 
-    //ToDo не трогать
     protected PrettyTable showListOfEmployee() {
         PrettyTable prettyTable = new PrettyTable("Id сотрудние", "Фамилия и Имя сотрудника", "Должность", "Зарплата");
         employeeRep.getAllEmployee().forEach(x -> prettyTable.addRow(String.valueOf(x.getId()), x.getFullName(),
@@ -55,14 +68,12 @@ public abstract class Accounts {
         return prettyTable;
     }
 
-    //ToDo не трогать
     protected PrettyTable showListOfClient() {
         PrettyTable prettyTable = new PrettyTable("Id клиента", "Фамилия и Имя клиента");
         clientRep.getAllClient().forEach(x -> prettyTable.addRow(String.valueOf(x.getId()), x.getFullName()));
         return prettyTable;
     }
 
-    //ToDo не трогать
     protected PrettyTable showMenu() {
         PrettyTable prettyTable = new PrettyTable("Id", "Название пробукта", "Стоимость");
         productRep.getAllProduct().forEach(x -> prettyTable.addRow(String.valueOf(x.getIdProduct()),
@@ -72,7 +83,6 @@ public abstract class Accounts {
     }
 
 
-    //TODO не трогать!
     protected PrettyTable showReview() {
         // Creating a come table and adding a header
         PrettyTable prettyTable = new PrettyTable("Отзыв", "Имя клиента");
@@ -84,7 +94,6 @@ public abstract class Accounts {
     }
 
 
-    //TODO не трогать!
     protected PrettyTable showTaskForEmployee() {
         PrettyTable prettyTable = new PrettyTable( "Id", "Заднание", "Айди сотрудника", "Имя сотрудника");
 
@@ -97,7 +106,6 @@ public abstract class Accounts {
     }
 
 
-    //TODO не трогать!
     protected void showFinishedTask() {
         PrettyTable prettyTable = new PrettyTable("Заднание", "Айди сотрудника", "Имя сотрудника");
 
@@ -110,7 +118,6 @@ public abstract class Accounts {
     }
 
 
-    //TODO не трогать!
     protected void showUnprocessedOrders() {
         PrettyTable prettyTable = new PrettyTable("Клиент", "Название", "Кол", "Стоимость", "Номер заказа");
 
@@ -125,7 +132,6 @@ public abstract class Accounts {
     }
 
 
-    //TODO не трогать!
     protected void end() {
         System.out.println("Программа завершена, мы будем рады вашему возвращению!");
     }

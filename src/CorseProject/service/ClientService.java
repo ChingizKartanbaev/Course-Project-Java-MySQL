@@ -49,7 +49,6 @@ public class ClientService extends Accounts {
 
 
     // 1 Меню
-    //TODO не трогать!
     private void makeOrder(long idClient) {
         ArrayList<Basket> baskets = new ArrayList<>();
         int numberOfOrder = 1 + (int) (Math.random() * 100);
@@ -165,7 +164,6 @@ public class ClientService extends Accounts {
 
 
     // 2 Меню
-    //TODO не трогать!
     private void checkOrder(){
         boolean flag = false;
 
@@ -190,7 +188,6 @@ public class ClientService extends Accounts {
 
 
     // 3 Меню
-    //TODO не трогать!
     private void writeReview(long idClient) {
         Scanner write = new Scanner(System.in);
 

@@ -57,7 +57,6 @@ public class CashierService extends Accounts {
 
 
     // 3 Меню
-    //ToDo не трогать!
     private void completeTask(long idEmployee) {
         loop:
         while (true){
@@ -98,7 +97,6 @@ public class CashierService extends Accounts {
 
 
     // 5 Меню
-    //ToDo не трогать!
     private void completeOrder() {
         loop:
         while (true) {
@@ -141,7 +139,6 @@ public class CashierService extends Accounts {
 
 
 
-    //ToDO не трогать!
     // 6 Меню
     private PrettyTable showSalary(long idEmployee) {
         PrettyTable prettyTable = new PrettyTable("ФИО","Зарплата");

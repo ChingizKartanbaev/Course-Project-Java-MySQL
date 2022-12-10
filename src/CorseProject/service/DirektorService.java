@@ -35,7 +35,7 @@ public class DirektorService extends Accounts {
 
             switch (scanner.nextInt()){
 
-                case 1 -> System.out.println(super.showAListOfAllCoverageAreas());
+                case 1 -> super.showAListOfAllCoverageAreas();
 
                 case 2 -> budget();
 
@@ -63,7 +63,6 @@ public class DirektorService extends Accounts {
 
 
     // 2 Меню
-    //ToDo
     private void budget() {
         // variable for storing the total budget
         double budgetThatUsed = 0;
@@ -96,7 +95,6 @@ public class DirektorService extends Accounts {
 
 
     // 3 Меню
-    //ToDo не трогать! может быть сделать короче
     private void redactBudget() {
         while (true){
 
@@ -138,7 +136,6 @@ public class DirektorService extends Accounts {
 
 
     // 5 Меню
-    //TODO не трогать!
     private void raiseSalary() {
         double salaryThatUsed = 0;
 
@@ -181,7 +178,6 @@ public class DirektorService extends Accounts {
 
 
     // 6 Меню
-    //TODO не трогать!
     private void lowerSalary() {
 
         // output a list of all employees
@@ -213,7 +209,6 @@ public class DirektorService extends Accounts {
 
 
     // 7 Меню
-    //TODO не трогать!
     private void register() {
 
         Scanner reg = new Scanner(System.in);
@@ -266,7 +261,6 @@ public class DirektorService extends Accounts {
 
 
     // 8 Меню
-    //TODO не трогать!
     private void delete() {
 
         System.out.println("Введите кого вы хотие удалить " +
