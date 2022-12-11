@@ -1,8 +1,6 @@
 # KFC (Course project java MySQL)
 
-The system is designed for
-processing data about patients, doctors, diagnoses and prescriptions.
-
+The employee control system for KFC is designed to make life easier for those who work in the KFC fast food chain by performing various tasks.
 
 
 ## Authors
@@ -48,7 +46,7 @@ To start program
 
 ## Documentation RUSSIAN
 
-[Documentation](https://docs.google.com/document/d/1MAWyaJt_K0CYvElYTRMVeEzn_aPxDlun/edit?usp=sharing&ouid=109468561172152088908&rtpof=true&sd=true)
+[Documentation](https://docs.google.com/document/d/1HPs2q7IlasOJd3zTxkHc7wizJWqA8bfY/edit?usp=sharing&ouid=110873767683336514560&rtpof=true&sd=true)
 
 
 ## Feedback
