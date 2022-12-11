@@ -31,7 +31,7 @@ Go to the project directory
 Install dependencies
 
 ```bash
-  all need files in jar package
+  all need files in Новая папка (2)
 ```
 
 
