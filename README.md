@@ -19,7 +19,7 @@ The employee control system for KFC is designed to make life easier for those wh
 Clone the project
 
 ```bash
-  git clone https://github.com/petrPalych/Course-Project-3
+  git clone https://github.com/Operans/Course-Project-Java-MySQL.git
 ```
 
 Go to the project directory
